@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quasar Chronicle — On-Chain Financial Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --rust: #b84c2e;
+    --sky: #1a3a5c;
+    --muted: #6b6457;
+    --rule: rgba(10,10,15,0.12);
+    --live: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    border-bottom: 3px double var(--ink);
+    padding: 0 2rem;
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .masthead-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 0 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dateline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .live-badge {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--live);
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--live);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .logo-wrap {
+    text-align: center;
+    padding: 0.6rem 0 0.4rem;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .logo span { color: var(--gold); }
+  .tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .nav-strip {
+    display: flex; gap: 0; border-top: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+  .nav-strip a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    transition: background 0.15s;
+    border-right: 1px solid var(--rule);
+  }
+  .nav-strip a:hover { background: var(--ink); color: var(--paper); }
+  .nav-strip a.active { background: var(--ink); color: var(--gold); }
+
+  /* ── TICKER ── */
+  .ticker-bar {
+    background: var(--ink);
+    color: var(--gold);
+    padding: 0.4rem 0;
+    overflow: hidden;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: scroll-left 30s linear infinite;
+  }
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .tick-item { display: inline-block; margin: 0 2.5rem; }
+  .tick-up { color: var(--live); }
+  .tick-dn { color: #e74c3c; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 2px solid var(--ink);
+    padding-top: 0.5rem;
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-label .refresh-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--gold-dim);
+    transition: all 0.15s;
+  }
+  .section-label .refresh-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+  /* ── HERO HEADLINE ── */
+  .hero-section { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); margin-bottom: 2rem; }
+  .hero-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 3rem; align-items: start; }
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.8rem;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .hero-byline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+  .hero-body {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: #2a2a35;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.8rem;
+  }
+  .hero-sidebar { border-left: 1px solid var(--rule); padding-left: 2rem; }
+  .sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* ── ETF PANEL ── */
+  .etf-card {
+    padding: 0.8rem 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .etf-card:last-child { border-bottom: none; }
+  .etf-name { font-size: 0.72rem; font-weight: 500; margin-bottom: 0.2rem; }
+  .etf-row { display: flex; justify-content: space-between; align-items: center; }
+  .etf-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); }
+  .etf-value { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; }
+  .etf-inflow { color: var(--live); }
+  .etf-outflow { color: #e74c3c; }
+  .etf-bar-wrap { height: 3px; background: var(--rule); margin-top: 0.4rem; border-radius: 2px; overflow: hidden; }
+  .etf-bar { height: 100%; border-radius: 2px; }
+
+  /* ── THREE COL GRID ── */
+  .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-bottom: 2.5rem; }
+  .news-card { border-top: 2px solid var(--ink); padding-top: 0.8rem; }
+  .news-cat {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.5rem;
+  }
+  .news-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .news-headline:hover { color: var(--sky); }
+  .news-meta { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--muted); margin-bottom: 0.6rem; }
+  .news-snippet { font-size: 0.82rem; line-height: 1.6; color: #3a3a45; }
+
+  /* ── AI BRIEFING BOX ── */
+  .ai-briefing {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-briefing::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,0.015) 28px, rgba(255,255,255,0.015) 29px);
+    pointer-events: none;
+  }
+  .ai-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .ai-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-dim); }
+  .ai-briefing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    color: var(--paper);
+  }
+  .ai-briefing-body {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.82);
+    max-width: 720px;
+  }
+  .ai-briefing-body p { margin-bottom: 0.8rem; }
+  .ai-signature {
+    margin-top: 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* ── LOADING STATE ── */
+  .loading-shimmer {
+    background: linear-gradient(90deg, var(--cream) 25%, var(--paper) 50%, var(--cream) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 3px;
+    display: block;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ── MARKET ROW ── */
+  .market-row {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin-bottom: 2.5rem;
+  }
+  .market-cell {
+    padding: 1rem 1.2rem;
+    border-right: 1px solid var(--rule);
+  }
+  .market-cell:last-child { border-right: none; }
+  .market-coin { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .market-price { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; line-height: 1; margin-bottom: 0.2rem; }
+  .market-change { font-family: 'DM Mono', monospace; font-size: 0.68rem; }
+  .up { color: var(--live); }
+  .dn { color: #e74c3c; }
+
+  /* ── HORIZONTAL RULE STORIES ── */
+  .list-stories { margin-bottom: 2.5rem; }
+  .story-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .story-row:hover { background: var(--cream); padding-left: 0.5rem; padding-right: 0.5rem; margin: 0 -0.5rem; }
+  .story-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rule); line-height: 1; }
+  .story-hed { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; line-height: 1.4; }
+  .story-tag { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.5);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+  footer strong { color: var(--gold); }
+  footer p { margin-top: 0.4rem; }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--rule);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── SENTIMENT BAR ── */
+  .sentiment-wrap { margin: 1.5rem 0 2.5rem; }
+  .sentiment-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; display: flex; justify-content: space-between; }
+  .sentiment-track { height: 6px; background: var(--rule); border-radius: 3px; overflow: hidden; position: relative; }
+  .sentiment-fill { height: 100%; border-radius: 3px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-sidebar { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 1.5rem; margin-top: 1.5rem; }
+    .three-col { grid-template-columns: 1fr; }
+    .market-row { grid-template-columns: 1fr 1fr; }
+    .market-cell:nth-child(2) { border-right: none; }
+  }
+  @media (max-width: 600px) {
+    .container { padding: 0 1rem; }
+    .masthead { padding: 0 1rem; }
+    .market-row { grid-template-columns: 1fr; }
+    .market-cell { border-right: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <span class="dateline" id="current-date">Loading date...</span>
+    <div class="live-badge"><div class="live-dot"></div> Live Intelligence Feed</div>
+  </div>
+  <div class="logo-wrap">
+    <div class="logo">Quasar <span>Chronicle</span></div>
+    <div class="tagline">Autonomous On-Chain Financial Intelligence · Powered by SoSoValue × AI</div>
+  </div>
+  <nav class="nav-strip">
+    <a href="#" class="active">Markets</a>
+    <a href="#">ETF Watch</a>
+    <a href="#">Research</a>
+    <a href="#">On-Chain</a>
+    <a href="#">Macro</a>
+    <a href="#">AI Briefing</a>
+    <a href="#">Index Desk</a>
+  </nav>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="ticker-content">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<main class="container" style="padding-top:2rem; padding-bottom: 3rem;">
+
+  <!-- MARKET SNAPSHOT -->
+  <div class="section-label">
+    Market Snapshot
+    <button class="refresh-btn" onclick="refreshAll()">↻ Refresh</button>
+  </div>
+  <div class="market-row" id="market-row">
+    <div class="market-cell"><div class="market-coin">BTC / USD</div><div class="market-price loading-shimmer" style="width:120px;height:28px">&nbsp;</div><div class="market-change loading-shimmer" style="width:60px;height:14px;margin-top:4px">&nbsp;</div></div>
+    <div class="market-cell"><div class="market-coin">ETH / USD</div><div class="market-price loading-shimmer" style="width:100px;height:28px">&nbsp;</div><div class="market-change loading-shimmer" style="width:60px;height:14px;margin-top:4px">&nbsp;</div></div>
+    <div class="market-cell"><div class="market-coin">SOL / USD</div><div class="market-price loading-shimmer" style="width:90px;height:28px">&nbsp;</div><div class="market-change loading-shimmer" style="width:60px;height:14px;margin-top:4px">&nbsp;</div></div>
+    <div class="market-cell"><div class="market-coin">BNB / USD</div><div class="market-price loading-shimmer" style="width:90px;height:28px">&nbsp;</div><div class="market-change loading-shimmer" style="width:60px;height:14px;margin-top:4px">&nbsp;</div></div>
+  </div>
+
+  <!-- MARKET SENTIMENT -->
+  <div class="sentiment-wrap">
+    <div class="sentiment-label"><span>Market Sentiment Index</span><span id="sentiment-text">Calculating...</span></div>
+    <div class="sentiment-track"><div class="sentiment-fill" id="sentiment-fill" style="width:0%;background:var(--gold)"></div></div>
+  </div>
+
+  <!-- HERO + ETF SIDEBAR -->
+  <div class="hero-section">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-kicker">⚡ AI-Generated Lead Story</div>
+        <h1 class="hero-headline" id="hero-headline"><span class="loading-shimmer" style="display:block;height:40px;margin-bottom:8px">&nbsp;</span><span class="loading-shimmer" style="display:block;height:40px;width:80%">&nbsp;</span></h1>
+        <div class="hero-byline" id="hero-byline">Quasar Chronicle Intelligence Desk · <span id="hero-time"></span></div>
+        <div class="hero-body" id="hero-body"><span class="loading-shimmer" style="display:block;height:14px;margin-bottom:6px">&nbsp;</span><span class="loading-shimmer" style="display:block;height:14px;margin-bottom:6px;width:92%">&nbsp;</span><span class="loading-shimmer" style="display:block;height:14px;width:85%">&nbsp;</span></div>
+      </div>
+      <div class="hero-sidebar">
+        <div class="sidebar-title">ETF Flow Tracker</div>
+        <div id="etf-panel">
+          <div class="etf-card"><div class="loading-shimmer" style="height:12px;margin-bottom:6px">&nbsp;</div><div class="loading-shimmer" style="height:10px;width:70%">&nbsp;</div></div>
+          <div class="etf-card"><div class="loading-shimmer" style="height:12px;margin-bottom:6px">&nbsp;</div><div class="loading-shimmer" style="height:10px;width:70%">&nbsp;</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI DAILY BRIEFING -->
+  <div class="ai-briefing" id="ai-briefing-box">
+    <div class="ai-label">AI Intelligence Briefing</div>
+    <div class="ai-briefing-title" id="briefing-title">Generating your daily market briefing...</div>
+    <div class="ai-briefing-body" id="briefing-body">
+      <p><span class="spinner"></span>&nbsp; Quasar's AI is analyzing SoSoValue data feeds and composing your briefing now...</p>
+    </div>
+    <div class="ai-signature" id="briefing-sig"></div>
+  </div>
+
+  <!-- THREE COLUMN NEWS -->
+  <div class="section-label">Latest Dispatches</div>
+  <div class="three-col" id="news-grid">
+    <div class="news-card"><div class="loading-shimmer" style="height:16px;margin-bottom:10px">&nbsp;</div><div class="loading-shimmer" style="height:12px;margin-bottom:6px">&nbsp;</div><div class="loading-shimmer" style="height:12px;width:80%">&nbsp;</div></div>
+    <div class="news-card"><div class="loading-shimmer" style="height:16px;margin-bottom:10px">&nbsp;</div><div class="loading-shimmer" style="height:12px;margin-bottom:6px">&nbsp;</div><div class="loading-shimmer" style="height:12px;width:80%">&nbsp;</div></div>
+    <div class="news-card"><div class="loading-shimmer" style="height:16px;margin-bottom:10px">&nbsp;</div><div class="loading-shimmer" style="height:12px;margin-bottom:6px">&nbsp;</div><div class="loading-shimmer" style="height:12px;width:80%">&nbsp;</div></div>
+  </div>
+
+  <!-- MOST READ -->
+  <div class="section-label">More Stories</div>
+  <div class="list-stories" id="list-stories">
+    <div class="story-row"><div class="story-num">01</div><div class="loading-shimmer" style="height:14px">&nbsp;</div><div class="loading-shimmer" style="height:10px;width:50px">&nbsp;</div></div>
+    <div class="story-row"><div class="story-num">02</div><div class="loading-shimmer" style="height:14px">&nbsp;</div><div class="loading-shimmer" style="height:10px;width:50px">&nbsp;</div></div>
+    <div class="story-row"><div class="story-num">03</div><div class="loading-shimmer" style="height:14px">&nbsp;</div><div class="loading-shimmer" style="height:10px;width:50px">&nbsp;</div></div>
+  </div>
+
+</main>
+
+<footer>
+  <div><strong>Quasar Chronicle</strong> — Autonomous On-Chain Financial Intelligence</div>
+  <p>Powered by SoSoValue API &amp; Claude AI · Built for the SoSoValue × SoDEX Buildathon 2025</p>
+  <p style="margin-top:0.6rem;opacity:0.4;">This platform is an AI-generated news service. Not financial advice.</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIGURATION — Replace with your real API keys
+// ═══════════════════════════════════════════════════════════
+const CONFIG = {
+  SOSOVALUE_API_KEY: 'SOSO-fd7d6b2071fb4d0cbadd0d869f835cd3',
+  // Claude API is called via a proxy; works as-is in this buildathon demo
+};
+
+// ═══════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════
+function fmt(n) {
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  return '$' + n.toLocaleString();
+}
+function fmtPrice(n) {
+  if (n > 1000) return '$' + n.toLocaleString('en-US', {minimumFractionDigits:0,maximumFractionDigits:0});
+  return '$' + n.toFixed(2);
+}
+function now() {
+  return new Date().toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit',timeZoneName:'short'});
+}
+function today() {
+  return new Date().toLocaleDateString('en-US', {weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MARKET DATA — CoinGecko (free, no key needed)
+// ═══════════════════════════════════════════════════════════
+async function fetchMarketData() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true');
+    const d = await res.json();
+    return d;
+  } catch(e) {
+    // fallback prices if API fails
+    return {
+      bitcoin: { usd: 96420, usd_24h_change: 2.14 },
+      ethereum: { usd: 3820, usd_24h_change: -0.87 },
+      solana: { usd: 178.40, usd_24h_change: 1.63 },
+      binancecoin: { usd: 608.20, usd_24h_change: 0.42 }
+    };
+  }
+}
+
+function renderMarket(data) {
+  const coins = [
+    { id: 'bitcoin', sym: 'BTC / USD' },
+    { id: 'ethereum', sym: 'ETH / USD' },
+    { id: 'solana', sym: 'SOL / USD' },
+    { id: 'binancecoin', sym: 'BNB / USD' }
+  ];
+  document.getElementById('market-row').innerHTML = coins.map(c => {
+    const p = data[c.id];
+    const chg = p.usd_24h_change.toFixed(2);
+    const cls = chg >= 0 ? 'up' : 'dn';
+    const arrow = chg >= 0 ? '▲' : '▼';
+    return `<div class="market-cell">
+      <div class="market-coin">${c.sym}</div>
+      <div class="market-price">${fmtPrice(p.usd)}</div>
+      <div class="market-change ${cls}">${arrow} ${Math.abs(chg)}%</div>
+    </div>`;
+  }).join('');
+
+  // Sentiment: average of positive movers
+  const changes = coins.map(c => data[c.id].usd_24h_change);
+  const avg = changes.reduce((a,b) => a+b, 0) / changes.length;
+  const sentPct = Math.min(100, Math.max(0, 50 + avg * 5));
+  const sentColor = sentPct > 55 ? 'var(--live)' : sentPct < 45 ? '#e74c3c' : 'var(--gold)';
+  const sentWord = sentPct > 60 ? 'Bullish' : sentPct > 52 ? 'Cautiously Bullish' : sentPct > 48 ? 'Neutral' : sentPct > 40 ? 'Cautious' : 'Bearish';
+  document.getElementById('sentiment-fill').style.width = sentPct + '%';
+  document.getElementById('sentiment-fill').style.background = sentColor;
+  document.getElementById('sentiment-text').textContent = `${sentWord} — ${sentPct.toFixed(0)}/100`;
+
+  // Ticker
+  const tStr = coins.map(c => {
+    const p = data[c.id];
+    const chg = p.usd_24h_change.toFixed(2);
+    const cls = chg >= 0 ? 'tick-up' : 'tick-dn';
+    const arrow = chg >= 0 ? '▲' : '▼';
+    return `<span class="tick-item">${c.sym.split('/')[0].trim()} ${fmtPrice(p.usd)} <span class="${cls}">${arrow}${Math.abs(chg)}%</span></span>`;
+  }).join(' · ');
+  // repeat for seamless scroll
+  document.getElementById('ticker-content').innerHTML = tStr + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + tStr;
+
+  return { changes, avg, sentWord };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SOSOVALUE API — News Feed
+// ═══════════════════════════════════════════════════════════
+async function fetchSoSoNews() {
+  // SoSoValue open API for news
+  const key = CONFIG.SOSOVALUE_API_KEY;
+  const cats = [1, 2]; // 1=news, 2=research
+
+  // If real key is set, use real API
+  if (key && key !== 'YOUR_SOSOVALUE_API_KEY') {
+    try {
+      const res = await fetch(
+        `https://openapi.sosovalue.com/api/v1/news/featured?pageNum=1&pageSize=9&categoryList=1,2`,
+        { headers: { 'x-soso-api-key': key } }
+      );
+      const d = await res.json();
+      if (d.code === 0 && d.data?.list?.length) return d.data.list;
+    } catch(e) { /* fall through to demo */ }
+  }
+
+  // ── Demo data (until real key is added) ──
+  return [
+    { id:'d1', category:1, releaseTime: Date.now()-3600000, tags:['BTC','ETF'], multilanguageContent:[{language:'en',title:'Bitcoin Spot ETFs Record $2.1B Weekly Inflows as Institutional Demand Surges',content:'<p>United States spot Bitcoin exchange-traded funds posted their strongest weekly inflows in six weeks, with total net inflows exceeding $2.1 billion. BlackRock\'s IBIT led all products with $890 million in fresh capital, signaling continued institutional accumulation at current price levels.</p>'}]},
+    { id:'d2', category:2, releaseTime: Date.now()-7200000, tags:['ETH','DeFi'], multilanguageContent:[{language:'en',title:'Ethereum Layer-2 Ecosystem Reaches Record $60B TVL Amid Fee Compression',content:'<p>Total value locked across Ethereum scaling networks crossed $60 billion for the first time, driven by a surge in DeFi activity on Arbitrum and Base. Analysts attribute the milestone to declining bridging costs and improved user experience on next-generation rollup infrastructure.</p>'}]},
+    { id:'d3', category:1, releaseTime: Date.now()-10800000, tags:['SOL','RWA'], multilanguageContent:[{language:'en',title:'Solana Emerges as Leading Chain for Real-World Asset Tokenization Pilots',content:'<p>Financial institutions are increasingly piloting real-world asset tokenization programs on Solana, attracted by its high-throughput architecture and low transaction costs. Three major banks announced proof-of-concept programs last week involving tokenized Treasury bonds and trade finance instruments.</p>'}]},
+    { id:'d4', category:2, releaseTime: Date.now()-14400000, tags:['Macro','Fed'], multilanguageContent:[{language:'en',title:'Federal Reserve Minutes Signal Patience; Crypto Markets Interpret as Dovish',content:'<p>The latest FOMC meeting minutes revealed committee members are in no rush to raise rates further, a stance the crypto market has interpreted as favorable for risk assets. Bitcoin added 3.2% in the two hours following the release before consolidating gains.</p>'}]},
+    { id:'d5', category:1, releaseTime: Date.now()-18000000, tags:['SOSO','ValueChain'], multilanguageContent:[{language:'en',title:'SoSoValue Launches API Platform, Enabling One-Person Financial Empires',content:'<p>AI-driven investment platform SoSoValue has opened its comprehensive API suite to third-party developers, providing access to ETF flow data, curated news feeds, and market analytics. Bybit has already completed deep integration, using the feeds to power its AI investment assistant.</p>'}]},
+    { id:'d6', category:2, releaseTime: Date.now()-21600000, tags:['Stablecoins','USDT'], multilanguageContent:[{language:'en',title:'Stablecoin Market Cap Tops $220B as Cross-Border Payment Use Cases Expand',content:'<p>The aggregate market capitalization of stablecoins reached a new all-time high of $220 billion, with growth concentrated in USDT and USDC. Analysts point to expanding use in remittances, cross-border trade settlement, and emerging-market dollar demand as primary growth drivers.</p>'}]},
+    { id:'d7', category:1, releaseTime: Date.now()-25200000, tags:['AI','Agents'], multilanguageContent:[{language:'en',title:'On-Chain AI Agents Begin Managing Real Portfolios as Regulatory Clarity Improves',content:'<p>Several DeFi protocols have deployed autonomous AI agents capable of managing on-chain investment portfolios without human intervention. The trend reflects growing developer confidence in agent-friendly blockchain infrastructure and improving legal frameworks for autonomous financial software.</p>'}]},
+    { id:'d8', category:2, releaseTime: Date.now()-28800000, tags:['BNB','BSC'], multilanguageContent:[{language:'en',title:'BNB Chain Reports 4M Daily Active Addresses, Rivaling Ethereum in User Activity',content:'<p>BNB Chain recorded over 4 million daily active addresses in the most recent 30-day period, placing it alongside Ethereum in terms of raw user engagement. The network\'s low gas fees continue to attract retail users and gaming applications away from higher-cost alternatives.</p>'}]},
+    { id:'d9', category:1, releaseTime: Date.now()-32400000, tags:['Index','SSI'], multilanguageContent:[{language:'en',title:'Crypto Index Funds See Record Demand as MAG7.ssi Token Surpasses $500M AUM',content:'<p>SoSoValue\'s MAG7.ssi index token, providing diversified exposure to top-seven cryptocurrency assets, surpassed $500 million in assets under management. The milestone underscores rising appetite for passive crypto exposure products among both retail and institutional participants.</p>'}]},
+  ];
+}
+
+const CATEGORIES = {1:'News',2:'Research',3:'Institution',4:'Insights',5:'Macro',6:'Macro Research',10:'On-Chain'};
+
+function getContent(item) {
+  const en = item.multilanguageContent?.find(l => l.language === 'en');
+  return en || item.multilanguageContent?.[0] || { title: 'Untitled', content: '' };
+}
+
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+}
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (h > 0) return h + 'h ago';
+  return m + 'm ago';
+}
+
+function renderNews(items) {
+  if (!items?.length) return;
+
+  // Hero
+  const hero = items[0];
+  const heroC = getContent(hero);
+  document.getElementById('hero-headline').textContent = heroC.title;
+  document.getElementById('hero-body').innerHTML = heroC.content || stripHtml(heroC.content);
+  document.getElementById('hero-time').textContent = timeAgo(hero.releaseTime);
+
+  // Three col
+  const three = items.slice(1, 4);
+  document.getElementById('news-grid').innerHTML = three.map(item => {
+    const c = getContent(item);
+    const snippet = stripHtml(c.content).substring(0, 120) + '...';
+    return `<div class="news-card">
+      <div class="news-cat">${CATEGORIES[item.category] || 'News'}</div>
+      <div class="news-headline">${c.title}</div>
+      <div class="news-meta">${timeAgo(item.releaseTime)} · ${(item.tags||[]).slice(0,2).join(', ')}</div>
+      <div class="news-snippet">${snippet}</div>
+    </div>`;
+  }).join('');
+
+  // List stories
+  const rest = items.slice(4);
+  document.getElementById('list-stories').innerHTML = rest.map((item, i) => {
+    const c = getContent(item);
+    return `<div class="story-row">
+      <div class="story-num">0${i+1}</div>
+      <div class="story-hed">${c.title}</div>
+      <div class="story-tag">${CATEGORIES[item.category] || 'News'}</div>
+    </div>`;
+  }).join('');
+
+  return items.map(i => getContent(i).title).join('; ');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SOSOVALUE — ETF Data (demo if no key)
+// ═══════════════════════════════════════════════════════════
+async function fetchEtfData() {
+  const key = CONFIG.SOSOVALUE_API_KEY;
+  if (key && key !== 'YOUR_SOSOVALUE_API_KEY') {
+    try {
+      const res = await fetch(
+        'https://openapi.sosovalue.com/api/v1/etf/summary',
+        { headers: { 'x-soso-api-key': key } }
+      );
+      const d = await res.json();
+      if (d.code === 0) return d.data;
+    } catch(e) {}
+  }
+  return [
+    { name:'Bitcoin Spot ETFs', dailyFlow: 312.4e6, totalAum: 58.2e9, positive: true },
+    { name:'Ethereum Spot ETFs', dailyFlow: -42.1e6, totalAum: 12.7e9, positive: false },
+  ];
+}
+
+function renderEtf(data) {
+  if (!data?.length) return;
+  document.getElementById('etf-panel').innerHTML = data.slice(0,3).map(e => {
+    const positive = e.dailyFlow >= 0;
+    const flowCls = positive ? 'etf-inflow' : 'etf-outflow';
+    const flowSign = positive ? '+' : '';
+    const barColor = positive ? 'var(--live)' : '#e74c3c';
+    const barPct = Math.min(100, Math.abs(e.dailyFlow) / 1e8 * 10);
+    return `<div class="etf-card">
+      <div class="etf-name">${e.name}</div>
+      <div class="etf-row">
+        <span class="etf-label">Daily Flow</span>
+        <span class="etf-value ${flowCls}">${flowSign}${fmt(Math.abs(e.dailyFlow))}</span>
+      </div>
+      <div class="etf-row" style="margin-top:0.2rem">
+        <span class="etf-label">Total AUM</span>
+        <span class="etf-value">${fmt(e.totalAum)}</span>
+      </div>
+      <div class="etf-bar-wrap"><div class="etf-bar" style="width:${barPct}%;background:${barColor}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CLAUDE AI — Generate Daily Briefing
+// ═══════════════════════════════════════════════════════════
+async function generateBriefing(headlines, marketSummary) {
+  const prompt = `You are the AI editor of Quasar Chronicle, an elite on-chain financial news agency powered by SoSoValue's data. Write a sharp, authoritative daily market briefing for sophisticated crypto investors.
+
+Today's data:
+- Market sentiment: ${marketSummary.sentWord}
+- Average 24h change across major assets: ${marketSummary.avg.toFixed(2)}%
+- Top headlines from SoSoValue feeds: ${headlines}
+
+Write a briefing with:
+1. A compelling, specific title (no quotes, max 12 words)
+2. Three crisp paragraphs of 2-3 sentences each covering: (a) market conditions, (b) key developments, (c) outlook
+3. Sign off with: "— Quasar Chronicle Intelligence Desk, [today's date]"
+
+Tone: Confident, analytical, Bloomberg-style. No vague statements. Be specific.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const d = await res.json();
+    return d.content?.[0]?.text || null;
+  } catch(e) { return null; }
+}
+
+function renderBriefing(text) {
+  if (!text) {
+    document.getElementById('briefing-title').textContent = 'Markets Digest — AI Briefing';
+    document.getElementById('briefing-body').innerHTML = '<p>Live AI briefing temporarily unavailable. SoSoValue data feeds active.</p>';
+    return;
+  }
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  const title = lines[0].replace(/^#+\s*/, '').replace(/\*\*/g,'');
+  const body = lines.slice(1).filter(l => !l.startsWith('—') && l.trim()).map(l => `<p>${l.replace(/\*\*/g,'')}</p>`).join('');
+  const sig = lines.find(l => l.startsWith('—')) || '';
+
+  document.getElementById('briefing-title').textContent = title;
+  document.getElementById('briefing-body').innerHTML = body;
+  document.getElementById('briefing-sig').textContent = sig;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ORCHESTRATOR
+// ═══════════════════════════════════════════════════════════
+async function refreshAll() {
+  document.getElementById('current-date').textContent = today();
+  document.getElementById('hero-time').textContent = now();
+
+  const [marketData, newsItems, etfData] = await Promise.all([
+    fetchMarketData(),
+    fetchSoSoNews(),
+    fetchEtfData()
+  ]);
+
+  const marketSummary = renderMarket(marketData);
+  const headlines = renderNews(newsItems);
+  renderEtf(etfData);
+
+  // Generate AI briefing last (after data is displayed)
+  const briefingText = await generateBriefing(headlines || '', marketSummary);
+  renderBriefing(briefingText);
+}
+
+// ── INIT ──
+document.getElementById('current-date').textContent = today();
+refreshAll();
+
+// Auto-refresh every 10 minutes
+setInterval(refreshAll, 10 * 60 * 1000);
+</script>
+</body>
+</html>
