@@ -367,7 +367,7 @@ function renderNews(items){
   document.getElementById('hero-body').innerHTML=hc.content||`<p>${stripHtml(hc.content)}</p>`;
   document.getElementById('hero-time').textContent=timeAgo(hero.releaseTime);
   document.getElementById('news-grid').innerHTML=items.slice(1,4).map(item=>{const c=getContent(item);return`<div class="news-card"><div class="news-cat">${CATS[item.category]||'News'}</div><div class="news-headline">${c.title}</div><div class="news-meta">${timeAgo(item.releaseTime)} · ${(item.tags||[]).slice(0,2).join(', ')}</div><div class="news-snippet">${stripHtml(c.content).substring(0,120)}...</div></div>`;}).join('');
-  document.getElementById('list-stories').innerHTML=items.slice(4).map((item,i)=>{const c=getContent(item);return`<div class="story-row" onclick="window.open('https://sosovalue.com/newsfeed','_blank')"><div class="story-num">0${i+1}</div><div class="story-hed">${c.title}</div><div class="story-tag">${CATS[item.category]||'News'}</div></div>`;}).join('');
+  document.getElementById('list-stories').innerHTML=items.slice(4).map((item,i)=>{const c=getContent(item);const url=item.id&&!item.id.startsWith('d')?`https://sosovalue.com/newsfeed/${item.id}`:'https://sosovalue.com/newsfeed';return`<div class="story-row" onclick="window.open('${url}','_blank')" title="Read on SoSoValue"><div class="story-num">0${i+1}</div><div class="story-hed">${c.title}</div><div class="story-tag">${CATS[item.category]||'News'}</div></div>`;}).join('');
   return items.map(i=>getContent(i).title).join('; ');
 }
 
