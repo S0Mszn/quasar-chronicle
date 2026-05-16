@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Quasar Chronicle — On-Chain Financial Intelligence</title> <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230d1b2e'/><circle cx='50' cy='42' r='22' fill='%23c9a84c'/><text y='58' x='50' text-anchor='middle' font-size='52' font-family='Georgia,serif' font-weight='700' fill='%230d1b2e'>Q</text></svg>"> <link rel="icon" type="image/x-icon" href="/favicon.ico">
+<title>Quasar Chronicle — On-Chain Financial Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -187,6 +187,18 @@ footer p{margin-top:0.4rem;}
     <div class="sentiment-label"><span>Market Sentiment Index</span><span id="sentiment-text">Calculating...</span></div>
     <div class="sentiment-track"><div class="sentiment-fill" id="sentiment-fill" style="width:0%;background:var(--gold)"></div></div>
   </div>
+  <!-- PRICE CHART -->
+  <div class="section-label" style="margin-top:0">Price Chart — 7 Day</div>
+  <div style="background:var(--cream);border:1px solid var(--rule);padding:1.2rem;margin-bottom:2.5rem;">
+    <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+      <button onclick="switchChart('bitcoin','BTC')" id="chart-btn-btc" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid var(--ink);background:var(--ink);color:var(--gold);cursor:pointer;">BTC</button>
+      <button onclick="switchChart('ethereum','ETH')" id="chart-btn-eth" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid var(--rule);background:none;color:var(--muted);cursor:pointer;">ETH</button>
+      <button onclick="switchChart('solana','SOL')" id="chart-btn-sol" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid var(--rule);background:none;color:var(--muted);cursor:pointer;">SOL</button>
+      <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);align-self:center;">Source: <a href="https://sosovalue.com/" target="_blank" style="color:var(--gold-dim);text-decoration:underline;">SoSoValue Markets</a></span>
+    </div>
+    <canvas id="priceChart" height="80"></canvas>
+  </div>
+
   <div class="hero-section">
     <div class="hero-grid">
       <div>
@@ -210,8 +222,12 @@ footer p{margin-top:0.4rem;}
     <div class="ai-briefing-title" id="briefing-title">Generating your daily market briefing...</div>
     <div class="ai-briefing-body" id="briefing-body"><p><span class="spinner"></span>&nbsp; Quasar's AI is analysing SoSoValue data feeds and composing your briefing now...</p></div>
     <div class="ai-signature" id="briefing-sig"></div>
-    <div style="margin-top:1.2rem;">
+    <div style="margin-top:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
       <a onclick="showPage('briefing')" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);cursor:pointer;text-decoration:underline;">Read Full AI Briefing Edition →</a>
+      <span style="flex:1"></span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.4);">Share:</span>
+      <a href="https://twitter.com/intent/tweet?text=Today%27s%20crypto%20market%20briefing%20from%20Quasar%20Chronicle%20%E2%80%94%20autonomous%20AI%20financial%20intelligence%20powered%20by%20%40sosovaluecrypto&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.2rem 0.6rem;">𝕏 Post</a>
+      <a onclick="navigator.clipboard.writeText('https://quasar-chronicle.vercel.app').then(()=>alert('Link copied!'))" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.2rem 0.6rem;cursor:pointer;">⎘ Copy Link</a>
     </div>
   </div>
 
@@ -285,6 +301,10 @@ footer p{margin-top:0.4rem;}
     </div>
     <div class="briefing-footer">
       Quasar Chronicle Intelligence Desk · Autonomous On-Chain Financial Publishing · quasar-chronicle.vercel.app
+      <div style="margin-top:1rem;display:flex;justify-content:center;gap:1rem;">
+        <a href="https://twitter.com/intent/tweet?text=Reading%20today%27s%20AI%20market%20briefing%20on%20Quasar%20Chronicle%20%E2%80%94%20powered%20by%20%40sosovaluecrypto%20data%20%26%20AI&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:0.3rem 0.8rem;">𝕏 Share on X</a>
+        <a onclick="navigator.clipboard.writeText('https://quasar-chronicle.vercel.app').then(()=>alert('Link copied!'))" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:0.3rem 0.8rem;cursor:pointer;">⎘ Copy Link</a>
+      </div>
     </div>
   </div>
 </div>
@@ -366,8 +386,8 @@ function renderNews(items){
   document.getElementById('hero-headline').textContent=hc.title;
   document.getElementById('hero-body').innerHTML=hc.content||`<p>${stripHtml(hc.content)}</p>`;
   document.getElementById('hero-time').textContent=timeAgo(hero.releaseTime);
-  document.getElementById('news-grid').innerHTML=items.slice(1,4).map(item=>{const c=getContent(item);return`<div class="news-card"><div class="news-cat">${CATS[item.category]||'News'}</div><div class="news-headline">${c.title}</div><div class="news-meta">${timeAgo(item.releaseTime)} · ${(item.tags||[]).slice(0,2).join(', ')}</div><div class="news-snippet">${stripHtml(c.content).substring(0,120)}...</div></div>`;}).join('');
-  document.getElementById('list-stories').innerHTML=items.slice(4).map((item,i)=>{const c=getContent(item);const url=item.id&&!item.id.startsWith('d')?`https://sosovalue.com/newsfeed/${item.id}`:'https://sosovalue.com/research';return`<div class="story-row" onclick="window.open('${url}','_blank')" title="Read on SoSoValue"><div class="story-num">0${i+1}</div><div class="story-hed">${c.title}</div><div class="story-tag">${CATS[item.category]||'News'}</div></div>`;}).join('');
+  document.getElementById('news-grid').innerHTML=items.slice(1,4).map(item=>{const c=getContent(item);return`<div class="news-card" onclick="window.open('https://sosovalue.com/research','_blank')" style="cursor:pointer"><div class="news-cat">${CATS[item.category]||'News'}</div><div class="news-headline">${c.title}</div><div class="news-meta">${timeAgo(item.releaseTime)} · ${(item.tags||[]).slice(0,2).join(', ')}</div><div class="news-snippet">${stripHtml(c.content).substring(0,120)}...</div><div style="margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--gold-dim);">📡 SOURCE: <a href="https://sosovalue.com/research" target="_blank" onclick="event.stopPropagation()" style="color:var(--gold-dim);text-decoration:underline;font-weight:500;">SoSoValue NewsFeed ↗</a></div></div>`;}).join('');
+  document.getElementById('list-stories').innerHTML=items.slice(4).map((item,i)=>{const c=getContent(item);return`<div class="story-row" onclick="window.open('https://sosovalue.com/research','_blank')" title="Read full story on SoSoValue"><div class="story-num">0${i+1}</div><div class="story-hed">${c.title}</div><div class="story-tag" style="text-align:right"><span style="display:block">${CATS[item.category]||'News'}</span><span style="display:block;font-size:0.48rem;color:var(--gold-dim);">SoSoValue ↗</span></div></div>`;}).join('');
   return items.map(i=>getContent(i).title).join('; ');
 }
 
@@ -485,6 +505,67 @@ async function refreshAll(){
 document.getElementById('current-date').textContent=today();
 refreshAll();
 setInterval(refreshAll,10*60*1000);
+
+// ═══════════════════════════════
+// PRICE CHART
+// ═══════════════════════════════
+let chartInstance=null;
+let currentCoin='bitcoin';
+
+async function loadChart(coinId,label){
+  try{
+    const r=await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7&interval=daily`);
+    const d=await r.json();
+    const prices=d.prices||[];
+    const labels=prices.map(p=>new Date(p[0]).toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+    const values=prices.map(p=>p[1]);
+    const up=values[values.length-1]>=values[0];
+    const color=up?'#2ecc71':'#e74c3c';
+    const canvas=document.getElementById('priceChart');
+    if(!canvas)return;
+    const ctx=canvas.getContext('2d');
+    if(chartInstance){chartInstance.destroy();chartInstance=null;}
+    // Simple canvas chart
+    canvas.width=canvas.offsetWidth||800;
+    canvas.height=80;
+    const w=canvas.width,h=canvas.height;
+    const min=Math.min(...values),max=Math.max(...values),range=max-min||1;
+    ctx.clearRect(0,0,w,h);
+    // Grid lines
+    ctx.strokeStyle='rgba(10,10,15,0.08)';ctx.lineWidth=1;
+    for(let i=0;i<4;i++){const y=h*i/3;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    // Gradient fill
+    const grad=ctx.createLinearGradient(0,0,0,h);
+    grad.addColorStop(0,up?'rgba(46,204,113,0.25)':'rgba(231,76,60,0.25)');
+    grad.addColorStop(1,'rgba(245,240,232,0)');
+    ctx.beginPath();
+    values.forEach((v,i)=>{const x=w*i/(values.length-1),y=h-(h*(v-min)/range)*0.85-h*0.05;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+    ctx.fillStyle=grad;ctx.fill();
+    // Line
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.lineJoin='round';
+    values.forEach((v,i)=>{const x=w*i/(values.length-1),y=h-(h*(v-min)/range)*0.85-h*0.05;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.stroke();
+    // Dots at start and end
+    [[0,values[0]],[values.length-1,values[values.length-1]]].forEach(([i,v])=>{
+      const x=w*i/(values.length-1),y=h-(h*(v-min)/range)*0.85-h*0.05;
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+      ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fillStyle='#f5f0e8';ctx.fill();
+    });
+  }catch(e){console.log('Chart error:',e);}
+}
+
+function switchChart(coinId,label){
+  currentCoin=coinId;
+  ['btc','eth','sol'].forEach(c=>{
+    const btn=document.getElementById('chart-btn-'+c);
+    if(btn){btn.style.background=c===label.toLowerCase()?'var(--ink)':'none';btn.style.color=c===label.toLowerCase()?'var(--gold)':'var(--muted)';btn.style.borderColor=c===label.toLowerCase()?'var(--ink)':'var(--rule)';}
+  });
+  loadChart(coinId,label);
+}
+
+// Load chart after initial data loads
+setTimeout(()=>loadChart('bitcoin','BTC'),2000);
 </script>
 </body>
 </html>
