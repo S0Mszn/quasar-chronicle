@@ -163,6 +163,7 @@ footer p{margin-top:0.4rem;}
     <a onclick="showPage('markets');jumpTo('markets-anchor')" id="nav-macro">Macro</a>
     <a onclick="showPage('briefing')" id="nav-briefing">AI Briefing</a>
     <a onclick="showPage('markets');jumpTo('markets-anchor')" id="nav-index">Index Desk</a>
+    <a onclick="showPage('howitworks')" id="nav-howitworks">How It Works</a>
   </nav>
 </header>
 
@@ -309,9 +310,171 @@ footer p{margin-top:0.4rem;}
   </div>
 </div>
 
+<!-- PAGE: HOW IT WORKS -->
+<div class="page" id="page-howitworks">
+  <div style="background:var(--paper);min-height:80vh;">
+
+    <!-- Header -->
+    <div style="background:var(--sky);padding:3rem 2rem;">
+      <div style="max-width:900px;margin:0 auto;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.8rem;">Technical Architecture</div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--paper);margin-bottom:0.8rem;">How Quasar Chronicle Works</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:0.95rem;color:rgba(245,240,232,0.7);line-height:1.7;max-width:600px;">A fully autonomous financial publishing pipeline — from SoSoValue's live data feeds through an AI editorial engine to institutional-grade financial journalism. No human intervention required.</div>
+      </div>
+    </div>
+
+    <!-- Pipeline diagram -->
+    <div style="max-width:900px;margin:0 auto;padding:3rem 2rem;">
+
+      <!-- Step flow -->
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.5rem;margin-bottom:2rem;">Publishing Pipeline</div>
+
+      <div style="display:flex;flex-direction:column;gap:0;">
+
+        <!-- Step 1 -->
+        <div style="display:grid;grid-template-columns:48px 1fr;gap:1.5rem;align-items:start;padding-bottom:2rem;position:relative;">
+          <div style="width:48px;height:48px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--gold);flex-shrink:0;">1</div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">Data Ingestion</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.6rem;">SoSoValue Open API</div>
+            <div style="font-size:0.85rem;line-height:1.7;color:#3a3a45;margin-bottom:1rem;">Quasar Chronicle connects to SoSoValue's Open API on every page load, pulling three categories of live structured financial data simultaneously.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+              <div style="background:var(--cream);padding:1rem;border-left:3px solid var(--gold);">
+                <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">News & Research</div>
+                <code style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);display:block;margin-bottom:0.3rem;">GET /api/v1/news/featured</code>
+                <div style="font-size:0.72rem;color:var(--muted);">?pageNum=1&pageSize=9&categoryList=1,2</div>
+                <div style="margin-top:0.5rem;font-size:0.72rem;color:#3a3a45;">Returns curated news and research articles. Powers the hero story, news grid, and story list.</div>
+              </div>
+              <div style="background:var(--cream);padding:1rem;border-left:3px solid var(--sky);">
+                <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sky);margin-bottom:0.4rem;">ETF Flow Data</div>
+                <code style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);display:block;margin-bottom:0.3rem;">GET /api/v1/etf/summary</code>
+                <div style="font-size:0.72rem;color:var(--muted);">Host: openapi.sosovalue.com</div>
+                <div style="margin-top:0.5rem;font-size:0.72rem;color:#3a3a45;">Returns BTC & ETH ETF AUM, daily flows, 7-day and 30-day flows. Powers ETF Watch dashboard.</div>
+              </div>
+            </div>
+            <div style="background:var(--cream);padding:1rem;border-left:3px solid var(--muted);margin-top:0.8rem;">
+              <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Authentication</div>
+              <code style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">Header: x-soso-api-key: [KEY]</code>
+              <div style="margin-top:0.4rem;font-size:0.72rem;color:#3a3a45;">All requests authenticated via SoSoValue Beta API key. Rate limit: 20 calls/min. <a href="https://sosovalue.com/developer" target="_blank" style="color:var(--gold-dim);">sosovalue.com/developer ↗</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div style="text-align:left;padding-left:24px;margin-bottom:1rem;font-size:1.5rem;color:var(--gold);line-height:1;">↓</div>
+
+        <!-- Step 2 -->
+        <div style="display:grid;grid-template-columns:48px 1fr;gap:1.5rem;align-items:start;padding-bottom:2rem;">
+          <div style="width:48px;height:48px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--ink);flex-shrink:0;">2</div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">AI Processing</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.6rem;">Groq AI — LLaMA 3.3 70B</div>
+            <div style="font-size:0.85rem;line-height:1.7;color:#3a3a45;margin-bottom:1rem;">SoSoValue's structured data is fed into an AI editorial engine via a secure Vercel serverless proxy. The AI synthesises raw market data into original financial journalism — autonomously, on every request.</div>
+            <div style="background:var(--ink);padding:1.2rem;color:var(--paper);">
+              <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;">Data Flow</div>
+              <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(245,240,232,0.8);line-height:2;">
+                SoSoValue News Headlines<br>
+                <span style="color:var(--gold-dim);">+</span> SoSoValue ETF Flow Figures<br>
+                <span style="color:var(--gold-dim);">+</span> Live Market Prices<br>
+                <span style="color:var(--gold);">→</span> AI Editorial Prompt<br>
+                <span style="color:var(--gold);">→</span> Groq /openai/v1/chat/completions<br>
+                <span style="color:var(--live);">→</span> Published Financial Briefing
+              </div>
+            </div>
+            <div style="margin-top:0.8rem;background:var(--cream);padding:1rem;border-left:3px solid var(--gold);">
+              <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.3rem;">Serverless Proxy</div>
+              <code style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">POST /api/brief</code>
+              <div style="margin-top:0.4rem;font-size:0.72rem;color:#3a3a45;">Vercel edge function handles API authentication and CORS, keeping credentials secure server-side while enabling real-time AI generation on every page load.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div style="text-align:left;padding-left:24px;margin-bottom:1rem;font-size:1.5rem;color:var(--gold);line-height:1;">↓</div>
+
+        <!-- Step 3 -->
+        <div style="display:grid;grid-template-columns:48px 1fr;gap:1.5rem;align-items:start;padding-bottom:2rem;">
+          <div style="width:48px;height:48px;background:var(--live);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--ink);flex-shrink:0;">3</div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">Publication</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.6rem;">Quasar Chronicle — Live</div>
+            <div style="font-size:0.85rem;line-height:1.7;color:#3a3a45;margin-bottom:1rem;">AI-generated content is rendered instantly in a professional newspaper-style interface. Three dedicated pages present different angles of the same underlying SoSoValue data intelligence.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;">
+              <div style="background:var(--cream);padding:0.8rem;text-align:center;border-top:3px solid var(--ink);">
+                <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">Markets</div>
+                <div style="font-size:0.72rem;color:#3a3a45;">Live prices, sentiment, lead story, ETF sidebar</div>
+              </div>
+              <div style="background:var(--cream);padding:0.8rem;text-align:center;border-top:3px solid var(--sky);">
+                <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">ETF Watch</div>
+                <div style="font-size:0.72rem;color:#3a3a45;">Full ETF dashboard with AI institutional analysis</div>
+              </div>
+              <div style="background:var(--cream);padding:0.8rem;text-align:center;border-top:3px solid var(--gold);">
+                <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;">AI Briefing</div>
+                <div style="font-size:0.72rem;color:#3a3a45;">Full newspaper edition with structured intelligence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tech stack table -->
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.5rem;margin-bottom:1.5rem;margin-top:1rem;">Full Tech Stack</div>
+      <div style="border:1px solid var(--rule);overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--ink);">
+          <div style="padding:0.6rem 1rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Layer</div>
+          <div style="padding:0.6rem 1rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Technology</div>
+          <div style="padding:0.6rem 1rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">Purpose</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--cream);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">Data</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">SoSoValue Open API</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">Live news, ETF flows, market intelligence</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--paper);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">AI</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">Groq — LLaMA 3.3 70B</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">Article generation, briefing synthesis</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--cream);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">Frontend</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">HTML5 / CSS3 / JavaScript</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">Zero-framework, fast, single-file architecture</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--paper);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">Backend</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">Vercel Serverless</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">API proxy, edge deployment, global CDN</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--cream);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">Version Control</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">GitHub (Public)</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">Open source, transparent, auditable</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--paper);">
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;">Roadmap</div>
+          <div style="padding:0.7rem 1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sky);">ValueChain (EVM)</div>
+          <div style="padding:0.7rem 1rem;font-size:0.75rem;color:#3a3a45;">Token-gated access, on-chain publishing</div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem;padding:1.5rem;background:var(--ink);color:var(--paper);text-align:center;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Built for the SoSoValue × SoDEX Buildathon</div>
+        <div style="font-size:0.85rem;color:rgba(245,240,232,0.6);margin-bottom:1rem;">One person. One idea. One autonomous financial media empire.</div>
+        <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
+          <a href="https://github.com/S0Mszn/quasar-chronicle" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.4rem 1rem;">GitHub Repo ↗</a>
+          <a href="https://sosovalue.com/developer" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.4rem 1rem;">SoSoValue API ↗</a>
+          <a onclick="showPage('markets')" style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.4rem 1rem;cursor:pointer;">View Live Product ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <footer>
   <div><strong>Quasar Chronicle</strong> — Autonomous On-Chain Financial Intelligence</div>
-  <p>Powered by SoSoValue API &amp; Claude AI · Built for the SoSoValue × SoDEX Buildathon</p>
+  <p>Powered by SoSoValue API &amp; Groq AI · Built for the SoSoValue × SoDEX Buildathon</p>
   <p style="margin-top:0.6rem;opacity:0.4;">AI-generated content. Not financial advice.</p>
 </footer>
 
