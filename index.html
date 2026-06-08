@@ -2,293 +2,248 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Quasar Chronicle — On-Chain Financial Intelligence</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230d1b2e'/><circle cx='50' cy='42' r='22' fill='%23c9a84c'/><text y='58' x='50' text-anchor='middle' font-size='52' font-family='Georgia,serif' font-weight='700' fill='%230d1b2e'>Q</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --ink:#0a0a0f;--paper:#f5f0e8;--cream:#ede7d5;
-  --gold:#c9a84c;--gold-dim:#8a6f2e;
-  --rust:#b84c2e;--sky:#1a3a5c;
-  --muted:#6b6457;--rule:rgba(10,10,15,0.12);
-  --live:#2ecc71;--red:#e74c3c;
-  --sodex:#00d4ff;--sodex-dim:#006680;
-}
+:root{--ink:#0a0a0f;--paper:#f5f0e8;--cream:#ede7d5;--gold:#c9a84c;--gdim:#8a6f2e;--rust:#b84c2e;--sky:#1a3a5c;--muted:#6b6457;--rule:rgba(10,10,15,0.12);--live:#2ecc71;--red:#e74c3c;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
-
 /* MASTHEAD */
 .masthead{border-bottom:3px double var(--ink);padding:0 2rem;background:var(--paper);position:sticky;top:0;z-index:100;}
-.masthead-top{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0 0.4rem;border-bottom:1px solid var(--rule);}
-.dateline{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
-.live-badge{display:flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--live);}
+.mh-top{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0 .5rem;border-bottom:1px solid var(--rule);}
+.dateline{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+.live-badge{display:flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--live);}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--live);animation:pulse 1.4s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
-.logo-wrap{text-align:center;padding:0.5rem 0 0.3rem;}
-.logo{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:900;letter-spacing:-0.02em;line-height:1;color:var(--ink);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.logo-wrap{text-align:center;padding:.6rem 0 .4rem;}
+.logo{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:-.02em;color:var(--ink);}
 .logo span{color:var(--gold);}
-.tagline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);margin-top:0.15rem;}
-.nav-strip{display:flex;border-top:1px solid var(--rule);overflow-x:auto;scrollbar-width:none;}
-.nav-strip::-webkit-scrollbar{display:none;}
-.nav-strip a{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:var(--ink);padding:0.45rem 0.9rem;white-space:nowrap;transition:all 0.15s;border-right:1px solid var(--rule);cursor:pointer;}
+.tagline{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;}
+.nav-strip{display:flex;border-top:1px solid var(--rule);overflow-x:auto;}
+.nav-strip a{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink);padding:.5rem .9rem;white-space:nowrap;border-right:1px solid var(--rule);cursor:pointer;transition:background .15s;}
 .nav-strip a:hover{background:var(--ink);color:var(--paper);}
 .nav-strip a.active{background:var(--ink);color:var(--gold);}
-.nav-strip a.sodex-tab{color:var(--sodex-dim);}
-.nav-strip a.sodex-tab.active,.nav-strip a.sodex-tab:hover{background:var(--sky);color:var(--sodex);}
-
+.nav-strip a.hot{color:var(--rust);font-weight:500;}
+.nav-strip a.hot.active{color:var(--gold);}
 /* TICKER */
-.ticker-bar{background:var(--ink);padding:0.35rem 0;overflow:hidden;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.07em;white-space:nowrap;}
-.ticker-inner{display:inline-block;animation:scroll-left 40s linear infinite;}
-@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.tick-item{display:inline-block;margin:0 2rem;color:var(--gold);}
-.tick-up{color:var(--live);}.tick-dn{color:var(--red);}
-
-/* PAGE */
-.page{display:none;animation:fadeIn 0.3s ease;}
-.page.active{display:block;}
+.ticker-bar{background:var(--ink);padding:.4rem 0;overflow:hidden;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.07em;white-space:nowrap;}
+.ticker-inner{display:inline-block;animation:ticker 35s linear infinite;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.t-up{color:var(--live);}.t-dn{color:var(--red);}.t-item{display:inline-block;margin:0 2rem;color:var(--gold);}
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
 /* LAYOUT */
 .container{max-width:1280px;margin:0 auto;padding:0 2rem;}
-.sec-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.45rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
-.btn-sm{background:none;border:1px solid var(--gold-dim);cursor:pointer;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);padding:0.18rem 0.5rem;transition:all 0.15s;}
+.sec-label{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:.5rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;}
+.btn-sm{background:none;border:1px solid var(--gdim);cursor:pointer;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gdim);padding:.2rem .5rem;transition:all .15s;}
 .btn-sm:hover{background:var(--gold);color:var(--ink);border-color:var(--gold);}
-.up{color:var(--live);}.dn{color:var(--red);}
-.shimmer{background:linear-gradient(90deg,var(--cream) 25%,var(--paper) 50%,var(--cream) 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:3px;display:block;}
+/* SHIMMER */
+.shim{background:linear-gradient(90deg,var(--cream) 25%,var(--paper) 50%,var(--cream) 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:2px;display:block;}
 @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.spin{width:14px;height:14px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spinr 0.7s linear infinite;display:inline-block;vertical-align:middle;}
-@keyframes spinr{to{transform:rotate(360deg)}}
-
+.spin{width:14px;height:14px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
 /* MARKET CELLS */
-.mkt-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);margin-bottom:1.8rem;}
-.mkt-cell{padding:0.9rem 1.1rem;border-right:1px solid var(--rule);}
+.mkt-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);margin-bottom:2rem;}
+.mkt-cell{padding:.9rem 1.1rem;border-right:1px solid var(--rule);}
 .mkt-cell:last-child{border-right:none;}
-.mkt-coin{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
-.mkt-price{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;line-height:1;margin-bottom:0.15rem;}
-.mkt-chg{font-family:'DM Mono',monospace;font-size:0.62rem;}
-.mkt-sub{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-top:0.1rem;}
-
+.mkt-coin{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.mkt-price{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;line-height:1;margin-bottom:.2rem;}
+.mkt-chg{font-family:'DM Mono',monospace;font-size:.65rem;}
+.up{color:var(--live);}.dn{color:var(--red);}
 /* SENTIMENT */
-.sent-wrap{margin:0.8rem 0 1.8rem;}
-.sent-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;display:flex;justify-content:space-between;}
+.sent-wrap{margin:0 0 2rem;}
+.sent-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between;}
 .sent-track{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;}
-.sent-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
-
-/* WATCHLIST */
-.wl-bar{background:var(--cream);border:1px solid var(--rule);padding:0.7rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
-.wl-label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
-.wl-chip{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border:1px solid var(--rule);cursor:pointer;transition:all 0.15s;background:var(--paper);color:var(--muted);}
-.wl-chip.active{background:var(--ink);color:var(--gold);border-color:var(--ink);}
-
-/* HERO */
-.hero-sec{padding:1.5rem 0 1.2rem;border-bottom:1px solid var(--rule);margin-bottom:1.8rem;}
-.hero-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:2.5rem;align-items:start;}
-.hero-kicker{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);margin-bottom:0.6rem;}
-.hero-hed{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;margin-bottom:0.8rem;}
-.hero-meta{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.6rem;}
-.hero-body{font-size:0.88rem;line-height:1.75;color:#2a2a35;border-top:1px solid var(--rule);padding-top:0.7rem;}
-.hero-body img{max-width:100%;height:auto;margin:0.5rem 0;}
-.sidebar{border-left:1px solid var(--rule);padding-left:1.8rem;}
-.sidebar-title{font-family:'Playfair Display',serif;font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:0.8rem;padding-bottom:0.3rem;border-bottom:1px solid var(--rule);}
-.etf-card{padding:0.65rem 0;border-bottom:1px dashed var(--rule);}
-.etf-card:last-child{border-bottom:none;}
-.etf-nm{font-size:0.68rem;font-weight:500;margin-bottom:0.12rem;}
-.etf-row{display:flex;justify-content:space-between;align-items:center;}
-.etf-lbl{font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);}
-.etf-val{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;}
-.etf-bw{height:3px;background:var(--rule);margin-top:0.3rem;border-radius:2px;overflow:hidden;}
-.etf-bf{height:100%;border-radius:2px;}
-
-/* AI BOX */
-.ai-box{background:var(--ink);color:var(--paper);padding:1.8rem;margin-bottom:2rem;position:relative;overflow:hidden;}
-.ai-box::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,0.015) 28px,rgba(255,255,255,0.015) 29px);pointer-events:none;}
-.ai-lbl{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.8rem;}
-.ai-lbl::after{content:'';flex:1;height:1px;background:var(--gold-dim);}
-.ai-title{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;font-style:italic;line-height:1.25;margin-bottom:0.9rem;color:var(--paper);}
-.ai-body{font-size:0.88rem;line-height:1.8;color:rgba(245,240,232,0.82);max-width:720px;}
-.ai-body p{margin-bottom:0.7rem;}
-.ai-sig{margin-top:1rem;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);}
-
-/* NEWS GRID */
-.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;margin-bottom:2rem;}
-.news-card{border-top:2px solid var(--ink);padding-top:0.8rem;cursor:pointer;}
-.news-card:hover .news-hed{color:var(--sky);}
-.news-cat{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;}
-.news-hed{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:0.5rem;transition:color 0.15s;}
-.news-meta{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-bottom:0.5rem;}
-.news-snip{font-size:0.8rem;line-height:1.6;color:#3a3a45;}
-.news-src{margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--gold-dim);}
-.news-img{width:100%;height:120px;object-fit:cover;margin-bottom:0.6rem;}
-
-/* STORY ROWS */
-.story-list{margin-bottom:2rem;}
-.story-row{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:1rem;padding:0.8rem 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:background 0.12s;}
-.story-row:hover{background:var(--cream);padding-left:0.4rem;padding-right:0.4rem;margin:0 -0.4rem;}
-.story-num{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--rule);line-height:1;}
-.story-hed{font-size:0.83rem;font-weight:500;line-height:1.4;}
-.story-tag{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;text-align:right;}
-
-/* SHARE BTNS */
-.share-row{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-top:1.2rem;}
-.share-btn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.7rem;border:1px solid var(--gold-dim);color:var(--gold);text-decoration:none;cursor:pointer;transition:all 0.15s;}
-.share-btn:hover{background:var(--gold);color:var(--ink);}
-.share-link{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;text-decoration:underline;}
-
-/* PRICE CHART */
+.sent-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+/* CHART */
 .chart-wrap{background:var(--cream);border:1px solid var(--rule);padding:1rem;margin-bottom:2rem;}
-.chart-btns{display:flex;gap:0.4rem;margin-bottom:0.8rem;align-items:center;}
-.chart-btn{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.7rem;border:1px solid var(--rule);background:none;color:var(--muted);cursor:pointer;transition:all 0.15s;}
+.chart-btns{display:flex;gap:.4rem;margin-bottom:.8rem;}
+.chart-btn{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border:1px solid var(--rule);background:none;color:var(--muted);cursor:pointer;transition:all .15s;}
 .chart-btn.active{background:var(--ink);color:var(--gold);border-color:var(--ink);}
-
-/* ETF WATCH PAGE */
-.page-header{padding:2.5rem 2rem;margin-bottom:0;}
-.page-header.dark{background:var(--sky);color:var(--paper);}
-.page-header.dark .ph-sub{color:rgba(245,240,232,0.5);}
-.ph-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.6rem;}
-.ph-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;line-height:1.1;margin-bottom:0.5rem;}
-.etf-summary{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,0.1);margin-top:1.2rem;}
-.etf-sum-cell{padding:1rem 0;border-right:1px solid rgba(255,255,255,0.1);}
-.etf-sum-cell:last-child{border-right:none;}
-.etf-sum-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.3rem;}
-.etf-sum-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--paper);}
-.etf-sum-chg{font-family:'DM Mono',monospace;font-size:0.6rem;margin-top:0.15rem;}
-.etf-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:2rem;max-width:1280px;margin:0 auto;}
-.etf-full-card{background:var(--paper);border:1px solid var(--rule);padding:1.3rem;}
-.etf-full-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.2rem;}
-.etf-full-ticker{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.6rem;border-bottom:1px solid var(--rule);}
-.etf-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem;}
-.etf-stat{background:var(--cream);padding:0.6rem;}
-.etf-stat-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
-.etf-stat-val{font-family:'DM Mono',monospace;font-size:0.85rem;font-weight:500;}
-.etf-hist-chart{width:100%;height:80px;position:relative;margin-top:0.8rem;}
-
-/* INDEX DESK PAGE */
-.index-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;padding:2rem;max-width:1280px;margin:0 auto;}
-.index-card{background:var(--paper);border:1px solid var(--rule);padding:1.3rem;border-top:3px solid var(--gold);}
-.index-ticker{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.3rem;}
-.index-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;}
-.index-price{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:0.2rem;}
-.index-chg{font-family:'DM Mono',monospace;font-size:0.65rem;margin-bottom:0.8rem;}
-.index-returns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem;}
-.idx-ret{background:var(--cream);padding:0.4rem 0.5rem;text-align:center;}
-.idx-ret-lbl{font-family:'DM Mono',monospace;font-size:0.48rem;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
-.idx-ret-val{font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:500;}
-
-/* MACRO PAGE */
-.macro-layout{display:grid;grid-template-columns:300px 1fr;gap:0;max-width:1280px;margin:0 auto;padding:2rem;}
-.macro-cal{border:1px solid var(--rule);}
-.macro-cal-header{background:var(--ink);color:var(--gold);padding:0.8rem 1rem;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;}
-.macro-day{padding:0.7rem 1rem;border-bottom:1px solid var(--rule);cursor:pointer;transition:background 0.12s;}
-.macro-day:hover,.macro-day.active{background:var(--cream);}
-.macro-day-date{font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:500;margin-bottom:0.2rem;}
-.macro-day-events{font-size:0.72rem;color:var(--muted);line-height:1.4;}
-.macro-detail{padding:0 0 0 2rem;}
-.macro-detail-header{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.4rem;margin-bottom:1.5rem;}
-.macro-event-card{background:var(--cream);border-left:3px solid var(--gold);padding:1rem 1.2rem;margin-bottom:1rem;}
-.macro-event-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.3rem;}
-.macro-event-date{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--muted);margin-bottom:0.5rem;}
-.macro-ai-brief{background:var(--ink);color:var(--paper);padding:1.2rem;margin-top:1rem;}
-
-/* SODEX TERMINAL */
-.sodex-header{background:linear-gradient(135deg,#0a0a1a 0%,#0d1b2e 60%,#0a1520 100%);padding:2.5rem 2rem;border-bottom:2px solid rgba(0,212,255,0.2);}
-.sodex-badge{display:inline-flex;align-items:center;gap:0.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--sodex);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:0.25rem 0.7rem;margin-bottom:0.7rem;}
-.sodex-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--paper);margin-bottom:0.3rem;}
-.sodex-sub{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:rgba(245,240,232,0.35);}
-.sodex-content{max-width:1280px;margin:0 auto;padding:2rem;}
-.sodex-grid{display:grid;grid-template-columns:1fr 360px;gap:2rem;margin-bottom:2rem;}
-.s-panel{background:#0a0a1a;border:1px solid rgba(0,212,255,0.12);padding:1.2rem;}
-.s-panel-title{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--sodex);margin-bottom:0.9rem;display:flex;align-items:center;justify-content:space-between;}
-.s-live{width:5px;height:5px;border-radius:50%;background:var(--live);animation:pulse 1.4s ease-in-out infinite;}
-.sym-tabs{display:flex;gap:0.4rem;margin-bottom:1rem;}
-.sym-tab{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.7rem;border:1px solid rgba(0,212,255,0.15);color:rgba(245,240,232,0.4);cursor:pointer;transition:all 0.15s;}
-.sym-tab.active{background:rgba(0,212,255,0.1);color:var(--sodex);border-color:rgba(0,212,255,0.3);}
-.sodex-price{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--paper);line-height:1;margin-bottom:0.2rem;}
-.sodex-price-chg{font-family:'DM Mono',monospace;font-size:0.65rem;margin-bottom:1rem;}
-.s-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
-.s-stat{background:rgba(255,255,255,0.03);padding:0.5rem 0.7rem;}
-.s-stat-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;text-transform:uppercase;color:rgba(245,240,232,0.3);margin-bottom:0.2rem;}
-.s-stat-val{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--paper);}
-.ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
-.ob-col-title{font-family:'DM Mono',monospace;font-size:0.5rem;text-transform:uppercase;margin-bottom:0.4rem;}
-.ob-ask-title{color:var(--red);}.ob-bid-title{color:var(--live);}
-.ob-row{display:flex;justify-content:space-between;padding:0.15rem 0;font-family:'DM Mono',monospace;font-size:0.6rem;position:relative;}
-.ob-row-fill{position:absolute;top:0;bottom:0;right:0;opacity:0.08;}
-.ob-ask-fill{background:var(--red);}.ob-bid-fill{background:var(--live);}
-.ob-ask{color:var(--red);}.ob-bid{color:var(--live);}
-.recent-trades{margin-top:1rem;}
-.rt-row{display:grid;grid-template-columns:1fr 1fr 1fr;font-family:'DM Mono',monospace;font-size:0.56rem;padding:0.2rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+/* HERO */
+.hero-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:2.5rem;align-items:start;padding:1.5rem 0 1.5rem;border-bottom:1px solid var(--rule);margin-bottom:2rem;}
+.hero-kicker{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin-bottom:.7rem;}
+.hero-hed{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.6rem);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:.8rem;}
+.hero-meta{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);margin-bottom:.7rem;}
+.hero-body{font-size:.92rem;line-height:1.75;color:#2a2a35;border-top:1px solid var(--rule);padding-top:.7rem;}
+.sidebar{border-left:1px solid var(--rule);padding-left:2rem;}
+.sidebar-title{font-family:'Playfair Display',serif;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.9rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+/* ETF CARD */
+.etf-card{padding:.7rem 0;border-bottom:1px dashed var(--rule);}
+.etf-card:last-child{border-bottom:none;}
+.etf-name{font-size:.7rem;font-weight:500;margin-bottom:.2rem;}
+.etf-row{display:flex;justify-content:space-between;align-items:center;}
+.etf-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);}
+.etf-val{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;}
+.inflow{color:var(--live);}.outflow{color:var(--red);}
+.bar-wrap{height:3px;background:var(--rule);margin-top:.35rem;border-radius:2px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:2px;}
+/* AI BOX */
+.ai-box{background:var(--ink);color:var(--paper);padding:2rem;margin-bottom:2rem;position:relative;}
+.ai-box::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,.015) 28px,rgba(255,255,255,.015) 29px);pointer-events:none;}
+.ai-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;display:flex;align-items:center;gap:.7rem;}
+.ai-lbl::after{content:'';flex:1;height:1px;background:var(--gdim);}
+.ai-title{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;font-style:italic;line-height:1.2;margin-bottom:.9rem;color:var(--paper);}
+.ai-body{font-size:.88rem;line-height:1.8;color:rgba(245,240,232,.82);max-width:720px;}
+.ai-body p{margin-bottom:.7rem;}
+.ai-sig{margin-top:1rem;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gdim);}
+/* NEWS GRID */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;margin-bottom:2rem;}
+.news-card{border-top:2px solid var(--ink);padding-top:.7rem;cursor:pointer;}
+.news-card:hover .news-hed{color:var(--sky);}
+.news-cat{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gdim);margin-bottom:.4rem;}
+.news-hed{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:.5rem;transition:color .15s;}
+.news-meta{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);margin-bottom:.5rem;}
+.news-snip{font-size:.8rem;line-height:1.6;color:#3a3a45;}
+.news-src{margin-top:.5rem;font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gdim);}
+/* STORY LIST */
+.story-list{margin-bottom:2rem;}
+.story-row{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .12s;}
+.story-row:hover{background:var(--cream);padding-left:.5rem;padding-right:.5rem;margin:0 -.5rem;}
+.story-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--rule);line-height:1;}
+.story-hed{font-size:.83rem;font-weight:500;line-height:1.35;}
+.story-tag{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;text-align:right;}
+/* WATCHLIST */
+.wl-chips{display:flex;gap:.4rem;flex-wrap:wrap;}
+.wl-chip{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .7rem;border:1px solid var(--rule);background:none;color:var(--muted);cursor:pointer;transition:all .15s;}
+.wl-chip.active{background:var(--ink);color:var(--gold);border-color:var(--ink);}
+/* PAGE HEADER */
+.ph{padding:2.5rem 2rem;background:var(--sky);color:var(--paper);}
+.ph-sub{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:.6rem;}
+.ph-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--paper);}
+.ph-strip{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.1);margin-top:1.2rem;}
+.ph-cell{padding:1rem 0;border-right:1px solid rgba(255,255,255,.1);}
+.ph-cell:last-child{border-right:none;}
+.ph-cell-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(245,240,232,.45);margin-bottom:.35rem;}
+.ph-cell-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--paper);}
+.ph-cell-sub{font-family:'DM Mono',monospace;font-size:.6rem;margin-top:.15rem;}
+/* ETF FULL CARD */
+.etf-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.5rem 2rem;max-width:1280px;margin:0 auto;}
+.etfc{background:var(--paper);border:1px solid var(--rule);padding:1.3rem;}
+.etfc-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.25rem;}
+.etfc-src{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:1px solid var(--rule);}
+.etfc-stats{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.8rem;}
+.etfc-stat{background:var(--cream);padding:.65rem;}
+.etfc-stat-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.etfc-stat-val{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;}
+.bar-track{height:7px;background:var(--rule);border-radius:4px;overflow:hidden;margin-top:.8rem;}
+.bar-fill2{height:100%;border-radius:4px;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+/* INDEX */
+.idx-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.idx-card{background:var(--cream);border:1px solid var(--rule);padding:1.3rem;}
+.idx-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.2rem;}
+.idx-desc{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);margin-bottom:.8rem;}
+.idx-coins{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.7rem;}
+.idx-coin{font-family:'DM Mono',monospace;font-size:.5rem;background:var(--ink);color:var(--gold);padding:.12rem .35rem;}
+/* MACRO */
+.macro-table{border:1px solid var(--rule);overflow:hidden;margin-bottom:1.5rem;}
+.macro-thead{display:grid;grid-template-columns:90px 1fr 80px 80px 80px;background:var(--ink);}
+.macro-th{padding:.55rem .8rem;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+.macro-row{display:grid;grid-template-columns:90px 1fr 80px 80px 80px;border-bottom:1px solid var(--rule);}
+.macro-row:last-child{border-bottom:none;}
+.macro-td{padding:.65rem .8rem;font-family:'DM Mono',monospace;font-size:.58rem;}
+.macro-event{font-size:.8rem;font-weight:500;font-family:'DM Sans',sans-serif;}
+.imp-high{color:var(--red);}.imp-med{color:var(--gold);}.imp-low{color:var(--muted);}
+/* RESEARCH */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;margin-bottom:2rem;}
+.res-card{border-top:2px solid var(--ink);padding-top:.8rem;cursor:pointer;}
+.res-card:hover .res-hed{color:var(--sky);}
+.res-img{width:100%;height:150px;object-fit:cover;margin-bottom:.7rem;}
+.res-hed{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:.5rem;transition:color .15s;}
+/* SODEX */
+.sdx-layout{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;padding:1.5rem 2rem;max-width:1280px;margin:0 auto;}
+.sdx-main{}
+.sdx-sidebar{}
+.sym-tabs{display:flex;gap:0;border:1px solid var(--rule);width:fit-content;margin-bottom:1rem;}
+.sym-tab{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;border-right:1px solid var(--rule);cursor:pointer;transition:all .15s;background:none;color:var(--muted);}
+.sym-tab:last-child{border-right:none;}
+.sym-tab.active{background:var(--ink);color:var(--gold);}
+.sdx-price-box{background:var(--ink);color:var(--paper);padding:1.5rem;margin-bottom:1rem;}
+.sdx-price{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--paper);}
+.sdx-chg{font-family:'DM Mono',monospace;font-size:.7rem;margin-top:.3rem;}
+.sdx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:1rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.8rem;}
+.sdx-stat{text-align:center;}
+.sdx-stat-lbl{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:.2rem;}
+.sdx-stat-val{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--paper);}
+/* ORDERBOOK */
+.ob-wrap{border:1px solid var(--rule);margin-bottom:1rem;}
+.ob-header{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--ink);padding:.5rem .8rem;}
+.ob-th{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+.ob-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:.35rem .8rem;border-bottom:1px solid rgba(10,10,15,.05);}
+.ob-row:last-child{border-bottom:none;}
+.ob-ask .ob-price{color:var(--red);}
+.ob-bid .ob-price{color:var(--live);}
+.ob-price,.ob-qty,.ob-total{font-family:'DM Mono',monospace;font-size:.6rem;}
 /* TRADE PANEL */
-.trade-tabs{display:flex;margin-bottom:1rem;}
-.trade-tab{flex:1;font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.5rem;border:1px solid rgba(0,212,255,0.15);cursor:pointer;text-align:center;color:rgba(245,240,232,0.4);transition:all 0.15s;}
-.trade-tab.buy.active{background:rgba(46,204,113,0.15);color:var(--live);border-color:rgba(46,204,113,0.3);}
-.trade-tab.sell.active{background:rgba(231,76,60,0.15);color:var(--red);border-color:rgba(231,76,60,0.3);}
-.trade-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(0,212,255,0.15);color:var(--paper);font-family:'DM Mono',monospace;font-size:0.75rem;padding:0.5rem 0.7rem;margin-bottom:0.6rem;outline:none;}
-.trade-input:focus{border-color:var(--sodex);}
-.trade-input::placeholder{color:rgba(245,240,232,0.25);}
-.trade-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;text-transform:uppercase;color:rgba(245,240,232,0.35);margin-bottom:0.2rem;}
-.trade-execute-btn{width:100%;padding:0.8rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.15s;margin-top:0.4rem;}
-.trade-execute-btn.buy-btn{background:var(--live);color:var(--ink);}
-.trade-execute-btn.sell-btn{background:var(--red);color:var(--paper);}
-.trade-execute-btn:hover{opacity:0.85;}
-.ot-btns{display:flex;gap:0.4rem;margin-bottom:0.8rem;}
-.ot-btn{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid rgba(0,212,255,0.15);color:rgba(245,240,232,0.35);cursor:pointer;transition:all 0.15s;}
-.ot-btn.active{background:rgba(0,212,255,0.1);color:var(--sodex);border-color:rgba(0,212,255,0.3);}
-
+.trade-panel{background:var(--cream);border:1px solid var(--rule);padding:1.2rem;}
+.trade-tabs{display:flex;gap:0;margin-bottom:1rem;}
+.trade-tab{flex:1;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem;border:1px solid var(--rule);cursor:pointer;text-align:center;background:none;color:var(--muted);transition:all .15s;}
+.trade-tab.buy.active{background:var(--live);color:var(--ink);border-color:var(--live);}
+.trade-tab.sell.active{background:var(--red);color:var(--paper);border-color:var(--red);}
+.trade-input-wrap{margin-bottom:.8rem;}
+.trade-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.trade-input{width:100%;padding:.5rem .7rem;border:1px solid var(--rule);background:var(--paper);font-family:'DM Mono',monospace;font-size:.75rem;outline:none;}
+.trade-input:focus{border-color:var(--gold);}
+.trade-btn{width:100%;padding:.7rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:none;margin-top:.8rem;transition:all .15s;}
+.trade-btn.buy{background:var(--live);color:var(--ink);}
+.trade-btn.sell{background:var(--red);color:var(--paper);}
 /* BRIEFING PAGE */
-.brief-page{background:var(--ink);min-height:80vh;}
-.brief-header{padding:3rem 2rem 2rem;border-bottom:1px solid rgba(255,255,255,0.08);max-width:1280px;margin:0 auto;}
-.brief-edition{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;}
-.brief-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;font-style:italic;color:var(--paper);line-height:1.15;margin-bottom:0.4rem;}
-.brief-meta{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:rgba(245,240,232,0.35);}
+.brief-page{background:var(--ink);min-height:70vh;}
+.brief-header{padding:3rem 2rem 2rem;border-bottom:1px solid rgba(255,255,255,.08);max-width:900px;margin:0 auto;}
+.brief-ed{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;}
+.brief-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;font-style:italic;color:var(--paper);line-height:1.15;}
+.brief-meta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:rgba(245,240,232,.35);margin-top:.5rem;}
 .brief-content{max-width:800px;margin:0 auto;padding:2.5rem 2rem;}
-.brief-sec{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:0.4rem;margin-bottom:1.1rem;margin-top:1.8rem;}
-.brief-para{font-size:0.95rem;line-height:1.85;color:rgba(245,240,232,0.84);margin-bottom:0.9rem;}
-.brief-pull{border-left:3px solid var(--gold);padding:1rem 1.5rem;margin:1.8rem 0;font-family:'Playfair Display',serif;font-size:1.15rem;font-style:italic;color:var(--paper);line-height:1.5;}
-.brief-sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin:1.2rem 0;}
-.sig-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:0.9rem;}
-.sig-lbl{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,232,0.35);margin-bottom:0.3rem;}
-.sig-val{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:500;color:var(--paper);}
-.sig-sub{font-family:'DM Mono',monospace;font-size:0.56rem;margin-top:0.15rem;}
-.brief-footer{text-align:center;padding:2rem;border-top:1px solid rgba(255,255,255,0.08);font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.25);}
-
+.brief-sec{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid rgba(201,168,76,.25);padding-bottom:.4rem;margin-bottom:1rem;margin-top:1.8rem;}
+.brief-p{font-size:.97rem;line-height:1.85;color:rgba(245,240,232,.85);margin-bottom:.9rem;}
+.brief-pq{border-left:3px solid var(--gold);padding:.9rem 1.4rem;margin:1.8rem 0;font-family:'Playfair Display',serif;font-size:1.15rem;font-style:italic;color:var(--paper);line-height:1.5;}
+.sig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin:1.4rem 0;}
+.sig-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:.9rem;}
+.sig-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:.35rem;}
+.sig-val{font-family:'DM Mono',monospace;font-size:.95rem;font-weight:500;color:var(--paper);}
+.sig-sub{font-family:'DM Mono',monospace;font-size:.58rem;margin-top:.2rem;}
+.brief-hl{padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.brief-hl-cat{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gdim);margin-bottom:.25rem;}
+.brief-hl-txt{font-size:.88rem;color:rgba(245,240,232,.88);line-height:1.4;}
+.brief-footer{text-align:center;padding:1.8rem 2rem;border-top:1px solid rgba(255,255,255,.07);font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.25);}
+.share-row{display:flex;justify-content:center;gap:.8rem;margin-top:.8rem;}
+.share-btn{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.45);text-decoration:none;border:1px solid rgba(255,255,255,.1);padding:.3rem .8rem;cursor:pointer;}
 /* HOW IT WORKS */
-.hiw-header{background:var(--sky);padding:3rem 2rem;}
-.hiw-content{max-width:960px;margin:0 auto;padding:3rem 2rem;}
-.api-card{background:var(--paper);border:1px solid var(--rule);padding:1.2rem;margin-bottom:1rem;border-left:3px solid var(--gold);}
-.api-card-module{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.3rem;}
-.api-card-ep{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--sky);margin-bottom:0.3rem;}
-.api-card-desc{font-size:0.78rem;color:#3a3a45;line-height:1.5;}
-.sodex-api-card{border-left-color:var(--sodex);}
-.sodex-api-card .api-card-ep{color:var(--sodex-dim);}
-
-/* RESEARCH PAGE */
-.research-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;padding:2rem;max-width:1280px;margin:0 auto;}
-.research-card{border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:box-shadow 0.15s;}
-.research-card:hover{box-shadow:0 4px 20px rgba(10,10,15,0.1);}
-.rc-img{width:100%;height:160px;object-fit:cover;background:var(--cream);}
-.rc-body{padding:1rem;}
-.rc-cat{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;}
-.rc-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:0.4rem;}
-.rc-meta{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-bottom:0.4rem;}
-.rc-author{display:flex;align-items:center;gap:0.5rem;margin-top:0.6rem;}
-.rc-avatar{width:24px;height:24px;border-radius:50%;object-fit:cover;background:var(--cream);}
-.rc-author-name{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);}
-
+.hiw-wrap{max-width:900px;margin:0 auto;padding:2.5rem 2rem;}
+.hiw-step{display:grid;grid-template-columns:48px 1fr;gap:1.4rem;align-items:start;padding-bottom:2rem;}
+.hiw-num{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;flex-shrink:0;}
+.hiw-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gdim);margin-bottom:.4rem;}
+.hiw-hed{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.6rem;}
+.hiw-txt{font-size:.85rem;line-height:1.7;color:#3a3a45;margin-bottom:.9rem;}
+.ep-card{background:var(--cream);border-left:3px solid var(--gold);padding:.9rem;margin-bottom:.6rem;}
+.ep-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.ep-code{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--sky);}
+.ep-desc{font-size:.72rem;color:#3a3a45;margin-top:.4rem;line-height:1.5;}
+.stack-table{border:1px solid var(--rule);overflow:hidden;margin-top:1rem;}
+.stack-head{display:grid;grid-template-columns:100px 160px 1fr;background:var(--ink);}
+.stack-th{padding:.55rem .9rem;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+.stack-row{display:grid;grid-template-columns:100px 160px 1fr;}
+.stack-td{padding:.65rem .9rem;font-family:'DM Mono',monospace;font-size:.6rem;}
+.stack-tech{color:var(--sky);}
 /* FOOTER */
-footer{background:var(--ink);color:rgba(245,240,232,0.5);padding:2rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;}
+footer{background:var(--ink);color:rgba(245,240,232,.45);padding:2rem;text-align:center;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.09em;}
 footer strong{color:var(--gold);}
-footer p{margin-top:0.3rem;}
-
+footer p{margin-top:.35rem;}
 /* RESPONSIVE */
 @media(max-width:900px){
-  .hero-grid,.sodex-grid,.macro-layout{grid-template-columns:1fr;}
+  .hero-grid,.etf-cards-grid,.sdx-layout,.idx-grid,.res-grid{grid-template-columns:1fr;}
   .sidebar{border-left:none;border-top:1px solid var(--rule);padding-left:0;padding-top:1.2rem;margin-top:1.2rem;}
-  .three-col,.etf-cards-grid,.research-grid,.index-grid{grid-template-columns:1fr;}
+  .news-grid{grid-template-columns:1fr;}
   .mkt-row{grid-template-columns:1fr 1fr;}
-  .etf-summary{grid-template-columns:1fr;}
-  .brief-sigs{grid-template-columns:1fr;}
+  .ph-strip{grid-template-columns:1fr;}
+  .sig-grid{grid-template-columns:1fr;}
+  .macro-thead,.macro-row{grid-template-columns:80px 1fr 70px 70px;}
+  .macro-thead .macro-th:last-child,.macro-row .macro-td:last-child{display:none;}
 }
 @media(max-width:600px){
   .container{padding:0 1rem;}
@@ -298,1231 +253,1156 @@ footer p{margin-top:0.3rem;}
 </style>
 </head>
 <body>
-
 <header class="masthead">
-  <div class="masthead-top">
+  <div class="mh-top">
     <span class="dateline" id="dateline"></span>
-    <div class="live-badge"><div class="live-dot"></div>Live Intelligence</div>
+    <div class="live-badge"><div class="live-dot"></div>Live Intelligence Feed</div>
   </div>
   <div class="logo-wrap">
     <div class="logo">Quasar <span>Chronicle</span></div>
     <div class="tagline">Autonomous On-Chain Financial Intelligence · SoSoValue × SoDEX × AI</div>
   </div>
   <nav class="nav-strip">
-    <a onclick="nav('markets')" id="nav-markets" class="active">Markets</a>
-    <a onclick="nav('etfwatch')" id="nav-etfwatch">ETF Watch</a>
-    <a onclick="nav('indexdesk')" id="nav-indexdesk">Index Desk</a>
-    <a onclick="nav('macro')" id="nav-macro">Macro</a>
-    <a onclick="nav('research')" id="nav-research">Research</a>
-    <a onclick="nav('sodex')" id="nav-sodex" class="sodex-tab">⚡ SoDEX Terminal</a>
-    <a onclick="nav('briefing')" id="nav-briefing">AI Briefing</a>
-    <a onclick="nav('howitworks')" id="nav-howitworks">How It Works</a>
+    <a id="nav-markets" onclick="nav('markets')">Markets</a>
+    <a id="nav-etfwatch" onclick="nav('etfwatch')">ETF Watch</a>
+    <a id="nav-indexdesk" onclick="nav('indexdesk')">Index Desk</a>
+    <a id="nav-macro" onclick="nav('macro')">Macro</a>
+    <a id="nav-research" onclick="nav('research')">Research</a>
+    <a id="nav-sodex" onclick="nav('sodex')" class="hot">⚡ SoDEX Terminal</a>
+    <a id="nav-briefing" onclick="nav('briefing')">AI Briefing</a>
+    <a id="nav-howitworks" onclick="nav('howitworks')">How It Works</a>
   </nav>
 </header>
+<div class="ticker-bar"><div class="ticker-inner" id="ticker">Loading market data...</div></div>
 
-<div class="ticker-bar"><div class="ticker-inner" id="ticker">Loading...</div></div>
-
-<!-- ═══ MARKETS ═══ -->
+<!-- ═══ PAGE: MARKETS ═══ -->
 <div class="page active" id="page-markets">
 <main class="container" style="padding-top:1.8rem;padding-bottom:3rem;">
-
-  <div class="sec-label" id="mkts-anchor">
-    Market Snapshot · SoSoValue Data
-    <button class="btn-sm" onclick="refreshAll()">↻ Refresh</button>
-  </div>
+  <div class="sec-label">Market Snapshot · SoSoValue Data<button class="btn-sm" onclick="refreshAll()">↻ Refresh</button></div>
   <div class="mkt-row" id="mkt-row">
-    <div class="mkt-cell"><div class="mkt-coin">BTC/USD</div><div class="mkt-price shimmer" style="height:26px;width:110px">&nbsp;</div></div>
-    <div class="mkt-cell"><div class="mkt-coin">ETH/USD</div><div class="mkt-price shimmer" style="height:26px;width:90px">&nbsp;</div></div>
-    <div class="mkt-cell"><div class="mkt-coin">SOL/USD</div><div class="mkt-price shimmer" style="height:26px;width:80px">&nbsp;</div></div>
-    <div class="mkt-cell"><div class="mkt-coin">BNB/USD</div><div class="mkt-price shimmer" style="height:26px;width:80px">&nbsp;</div></div>
+    <div class="mkt-cell"><div class="mkt-coin">BTC/USD</div><div class="shim" style="height:28px;width:120px;margin-bottom:4px"></div><div class="shim" style="height:14px;width:60px"></div></div>
+    <div class="mkt-cell"><div class="mkt-coin">ETH/USD</div><div class="shim" style="height:28px;width:100px;margin-bottom:4px"></div><div class="shim" style="height:14px;width:60px"></div></div>
+    <div class="mkt-cell"><div class="mkt-coin">SOL/USD</div><div class="shim" style="height:28px;width:90px;margin-bottom:4px"></div><div class="shim" style="height:14px;width:60px"></div></div>
+    <div class="mkt-cell"><div class="mkt-coin">BNB/USD</div><div class="shim" style="height:28px;width:90px;margin-bottom:4px"></div><div class="shim" style="height:14px;width:60px"></div></div>
   </div>
-
   <div class="sent-wrap">
-    <div class="sent-label"><span>Market Sentiment</span><span id="sent-txt">Calculating...</span></div>
+    <div class="sent-lbl"><span>Market Sentiment Index</span><span id="sent-txt">Calculating...</span></div>
     <div class="sent-track"><div class="sent-fill" id="sent-fill" style="width:0%;background:var(--gold)"></div></div>
   </div>
-
-  <!-- WATCHLIST -->
-  <div class="wl-bar">
-    <span class="wl-label">Filter by Asset</span>
-    <div id="wl-chips"></div>
-  </div>
-
-  <!-- PRICE CHART -->
+  <div class="sec-label" style="border-top:none;margin-top:0">Filter by Asset</div>
+  <div style="margin-bottom:1.5rem"><div class="wl-chips" id="wl-chips"></div></div>
   <div class="chart-wrap">
-    <div class="chart-btns">
-      <button class="chart-btn active" id="cbtn-btc" onclick="switchChart('bitcoin','btc')">BTC</button>
-      <button class="chart-btn" id="cbtn-eth" onclick="switchChart('ethereum','eth')">ETH</button>
-      <button class="chart-btn" id="cbtn-sol" onclick="switchChart('solana','sol')">SOL</button>
-      <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--muted);">7-Day · Source: <a href="https://sosovalue.com/" target="_blank" style="color:var(--gold-dim);">SoSoValue</a></span>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+      <div class="chart-btns">
+        <button class="chart-btn active" id="cbtn-btc" onclick="switchChart('bitcoin','btc')">BTC</button>
+        <button class="chart-btn" id="cbtn-eth" onclick="switchChart('ethereum','eth')">ETH</button>
+        <button class="chart-btn" id="cbtn-sol" onclick="switchChart('solana','sol')">SOL</button>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted)">7-Day · Source: <a href="https://sosovalue.com" target="_blank" style="color:var(--gdim)">SoSoValue</a></span>
     </div>
-    <canvas id="priceChart" height="70"></canvas>
+    <canvas id="priceChart" style="width:100%;height:80px"></canvas>
   </div>
-
-  <!-- HERO -->
-  <div class="hero-sec">
-    <div class="hero-grid">
-      <div>
-        <div class="hero-kicker">⚡ AI-Generated Lead Story</div>
-        <h1 class="hero-hed" id="hero-hed"><span class="shimmer" style="height:36px;display:block;margin-bottom:6px">&nbsp;</span><span class="shimmer" style="height:36px;display:block;width:75%">&nbsp;</span></h1>
-        <div class="hero-meta" id="hero-meta">Quasar Chronicle Intelligence Desk</div>
-        <div class="hero-body" id="hero-body"><span class="shimmer" style="height:12px;display:block;margin-bottom:5px">&nbsp;</span><span class="shimmer" style="height:12px;display:block;margin-bottom:5px;width:90%">&nbsp;</span><span class="shimmer" style="height:12px;display:block;width:80%">&nbsp;</span></div>
-      </div>
-      <div class="sidebar">
-        <div class="sidebar-title">ETF Flow Tracker</div>
-        <div id="etf-sidebar"><div class="shimmer" style="height:70px;margin-bottom:6px">&nbsp;</div><div class="shimmer" style="height:70px">&nbsp;</div></div>
-        <div style="margin-top:0.8rem;text-align:right">
-          <a onclick="nav('etfwatch')" style="font-family:'DM Mono',monospace;font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold-dim);cursor:pointer;text-decoration:underline;">Full ETF Dashboard →</a>
-        </div>
-      </div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-kicker">⚡ AI-Generated Lead Story</div>
+      <h1 class="hero-hed" id="hero-hed"><span class="shim" style="display:block;height:36px;margin-bottom:6px"></span><span class="shim" style="display:block;height:36px;width:80%"></span></h1>
+      <div class="hero-meta" id="hero-meta">Quasar Chronicle Intelligence Desk</div>
+      <div class="hero-body" id="hero-body"><span class="shim" style="display:block;height:13px;margin-bottom:5px"></span><span class="shim" style="display:block;height:13px;margin-bottom:5px;width:92%"></span><span class="shim" style="display:block;height:13px;width:85%"></span></div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-title">ETF Flow Tracker</div>
+      <div id="etf-sidebar"><div class="shim" style="height:70px;margin-bottom:6px"></div><div class="shim" style="height:70px"></div></div>
+      <div style="margin-top:.8rem;text-align:right"><a onclick="nav('etfwatch')" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gdim);cursor:pointer;text-decoration:underline">Full ETF Dashboard →</a></div>
     </div>
   </div>
-
-  <!-- AI BRIEFING BOX -->
   <div class="ai-box">
     <div class="ai-lbl">AI Intelligence Briefing</div>
     <div class="ai-title" id="home-brief-title">Generating your daily market briefing...</div>
-    <div class="ai-body" id="home-brief-body"><p><span class="spin"></span>&nbsp; Quasar's AI is analysing SoSoValue data feeds...</p></div>
+    <div class="ai-body" id="home-brief-body"><p><span class="spin"></span> Quasar's AI is analysing SoSoValue data feeds...</p></div>
     <div class="ai-sig" id="home-brief-sig"></div>
-    <div class="share-row">
-      <a onclick="nav('briefing')" class="share-link">Read Full AI Briefing Edition →</a>
+    <div style="margin-top:1.2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <a onclick="nav('briefing')" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;text-decoration:underline">Read Full AI Briefing Edition →</a>
       <span style="flex:1"></span>
-      <a href="https://twitter.com/intent/tweet?text=Today%27s%20crypto%20market%20briefing%20from%20Quasar%20Chronicle%20%E2%80%94%20autonomous%20AI%20financial%20intelligence%20powered%20by%20%40sosovaluecrypto&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" class="share-btn">𝕏 Share</a>
-      <a onclick="navigator.clipboard.writeText('https://quasar-chronicle.vercel.app').then(()=>alert('Copied!'))" class="share-btn">⎘ Copy Link</a>
+      <a href="https://twitter.com/intent/tweet?text=Today%27s%20crypto%20briefing%20from%20Quasar%20Chronicle%20%E2%80%94%20AI%20financial%20intelligence%20powered%20by%20%40sosovaluecrypto&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gdim);padding:.2rem .6rem">𝕏 Share</a>
     </div>
   </div>
-
-  <div class="sec-label" id="news-anchor">Latest Dispatches · <a href="https://sosovalue.com/research" target="_blank" style="color:var(--gold-dim);text-decoration:underline;font-size:0.5rem;">SoSoValue NewsFeed ↗</a></div>
-  <div class="three-col" id="news-grid">
-    <div class="news-card"><div class="shimmer" style="height:14px;margin-bottom:8px">&nbsp;</div><div class="shimmer" style="height:11px;width:80%">&nbsp;</div></div>
-    <div class="news-card"><div class="shimmer" style="height:14px;margin-bottom:8px">&nbsp;</div><div class="shimmer" style="height:11px;width:80%">&nbsp;</div></div>
-    <div class="news-card"><div class="shimmer" style="height:14px;margin-bottom:8px">&nbsp;</div><div class="shimmer" style="height:11px;width:80%">&nbsp;</div></div>
+  <div class="sec-label" id="research-anchor">Latest Dispatches</div>
+  <div class="news-grid" id="news-grid">
+    <div class="news-card"><div class="shim" style="height:15px;margin-bottom:8px"></div><div class="shim" style="height:12px;margin-bottom:5px"></div><div class="shim" style="height:12px;width:80%"></div></div>
+    <div class="news-card"><div class="shim" style="height:15px;margin-bottom:8px"></div><div class="shim" style="height:12px;margin-bottom:5px"></div><div class="shim" style="height:12px;width:80%"></div></div>
+    <div class="news-card"><div class="shim" style="height:15px;margin-bottom:8px"></div><div class="shim" style="height:12px;margin-bottom:5px"></div><div class="shim" style="height:12px;width:80%"></div></div>
   </div>
-
   <div class="sec-label">More Stories</div>
   <div class="story-list" id="story-list">
-    <div class="story-row"><div class="story-num">01</div><div class="shimmer" style="height:12px">&nbsp;</div><div class="shimmer" style="height:10px;width:40px">&nbsp;</div></div>
-    <div class="story-row"><div class="story-num">02</div><div class="shimmer" style="height:12px">&nbsp;</div><div class="shimmer" style="height:10px;width:40px">&nbsp;</div></div>
-    <div class="story-row"><div class="story-num">03</div><div class="shimmer" style="height:12px">&nbsp;</div><div class="shimmer" style="height:10px;width:40px">&nbsp;</div></div>
+    <div class="story-row"><div class="story-num">01</div><div class="shim" style="height:13px"></div><div class="shim" style="height:10px;width:40px"></div></div>
+    <div class="story-row"><div class="story-num">02</div><div class="shim" style="height:13px"></div><div class="shim" style="height:10px;width:40px"></div></div>
+    <div class="story-row"><div class="story-num">03</div><div class="shim" style="height:13px"></div><div class="shim" style="height:10px;width:40px"></div></div>
   </div>
-
 </main>
 </div>
 
-<!-- ═══ ETF WATCH ═══ -->
+<!-- ═══ PAGE: ETF WATCH ═══ -->
 <div class="page" id="page-etfwatch">
-  <div class="page-header dark">
-    <div style="max-width:1280px;margin:0 auto;">
-      <div class="ph-sub">SoSoValue ETF Module · Real-Time Data</div>
-      <div class="ph-title" style="color:var(--paper)">ETF Flow Intelligence</div>
-      <div class="etf-summary" id="etf-summary">
-        <div class="etf-sum-cell"><div class="etf-sum-lbl">BTC ETF Total AUM</div><div class="etf-sum-val" id="btc-aum">—</div><div class="etf-sum-chg" id="btc-flow"></div></div>
-        <div class="etf-sum-cell"><div class="etf-sum-lbl">ETH ETF Total AUM</div><div class="etf-sum-val" id="eth-aum">—</div><div class="etf-sum-chg" id="eth-flow"></div></div>
-        <div class="etf-sum-cell"><div class="etf-sum-lbl">Combined Daily Flow</div><div class="etf-sum-val" id="combined-flow">—</div><div class="etf-sum-chg" id="flow-signal"></div></div>
+  <div class="ph">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="ph-sub">SoSoValue Data Feed · Real-Time</div>
+      <div class="ph-title">ETF Flow Intelligence</div>
+      <div class="ph-strip">
+        <div class="ph-cell"><div class="ph-cell-lbl">Bitcoin ETF Total AUM</div><div class="ph-cell-val" id="ph-btc-aum">—</div><div class="ph-cell-sub" id="ph-btc-flow"></div></div>
+        <div class="ph-cell"><div class="ph-cell-lbl">Ethereum ETF Total AUM</div><div class="ph-cell-val" id="ph-eth-aum">—</div><div class="ph-cell-sub" id="ph-eth-flow"></div></div>
+        <div class="ph-cell"><div class="ph-cell-lbl">Combined Daily Net Flow</div><div class="ph-cell-val" id="ph-combined">—</div><div class="ph-cell-sub" id="ph-flow-sig"></div></div>
       </div>
     </div>
   </div>
-
-  <!-- Historical Chart -->
-  <div style="max-width:1280px;margin:0 auto;padding:2rem 2rem 0;">
-    <div class="sec-label">Historical Inflow Chart · 30 Days
-      <div style="display:flex;gap:0.4rem;">
-        <button class="btn-sm active" id="hbtn-btc" onclick="switchEtfChart('BTC')">BTC</button>
-        <button class="btn-sm" id="hbtn-eth" onclick="switchEtfChart('ETH')">ETH</button>
-      </div>
-    </div>
-    <div style="background:var(--cream);border:1px solid var(--rule);padding:1rem;margin-bottom:2rem;">
-      <canvas id="etfHistChart" height="80"></canvas>
+  <div class="etf-cards-grid" id="etf-cards"><div class="shim" style="height:200px"></div><div class="shim" style="height:200px"></div></div>
+  <div style="padding:0 2rem 1.5rem;max-width:1280px;margin:0 auto">
+    <div class="sec-label">30-Day ETF Flow History · SoSoValue</div>
+    <div style="background:var(--cream);border:1px solid var(--rule);padding:1rem">
+      <canvas id="etfHistChart" style="width:100%;height:100px"></canvas>
     </div>
   </div>
-
-  <div class="etf-cards-grid" id="etf-cards-grid">
-    <div class="etf-full-card"><div class="shimmer" style="height:180px">&nbsp;</div></div>
-    <div class="etf-full-card"><div class="shimmer" style="height:180px">&nbsp;</div></div>
-  </div>
-
-  <div style="max-width:1280px;margin:0 auto;padding:0 2rem 2rem;">
+  <div style="padding:0 2rem 2rem;max-width:1280px;margin:0 auto">
     <div class="ai-box">
-      <div class="ai-lbl">AI ETF Analysis · Powered by SoSoValue Data</div>
+      <div class="ai-lbl">AI ETF Analysis</div>
       <div class="ai-title" id="etf-ai-title">Analysing ETF flow patterns...</div>
-      <div class="ai-body" id="etf-ai-body"><p><span class="spin"></span>&nbsp; Processing ETF data through Quasar intelligence layer...</p></div>
+      <div class="ai-body" id="etf-ai-body"><p><span class="spin"></span> Processing SoSoValue ETF data...</p></div>
       <div class="ai-sig" id="etf-ai-sig"></div>
     </div>
+    <div style="font-family:'DM Mono',monospace;font-size:.5rem;text-align:center;color:var(--muted)">ETF data sourced from SoSoValue Open API · <a href="https://sosovalue.com/etfs" target="_blank" style="color:var(--gdim)">sosovalue.com/etfs ↗</a></div>
   </div>
 </div>
 
-<!-- ═══ INDEX DESK ═══ -->
+<!-- ═══ PAGE: INDEX DESK ═══ -->
 <div class="page" id="page-indexdesk">
-  <div class="page-header dark">
-    <div style="max-width:1280px;margin:0 auto;">
-      <div class="ph-sub">SoSoValue Index Module · SSI Products</div>
-      <div class="ph-title" style="color:var(--paper)">SoSoValue Index Desk</div>
-      <div style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:rgba(245,240,232,0.6);margin-top:0.5rem;max-width:600px;">Live performance data for SoSoValue's proprietary crypto indices — MAG7.ssi, Layer1.ssi, and more. All data sourced from the SoSoValue Index API.</div>
+  <div class="ph">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="ph-sub">SoSoValue Index Products</div>
+      <div class="ph-title">Index Desk</div>
     </div>
   </div>
-  <div class="index-grid" id="index-grid">
-    <div class="index-card"><div class="shimmer" style="height:160px">&nbsp;</div></div>
-    <div class="index-card"><div class="shimmer" style="height:160px">&nbsp;</div></div>
-    <div class="index-card"><div class="shimmer" style="height:160px">&nbsp;</div></div>
-  </div>
-  <div style="max-width:1280px;margin:0 auto;padding:0 2rem 2rem;">
+  <main class="container" style="padding-top:1.8rem;padding-bottom:3rem">
+    <div class="sec-label">SoSoValue Indices</div>
+    <div class="idx-grid" id="idx-grid"><div class="shim" style="height:180px"></div><div class="shim" style="height:180px"></div></div>
     <div class="ai-box">
-      <div class="ai-lbl">AI Index Commentary · SoSoValue SSI Products</div>
-      <div class="ai-title" id="index-ai-title">Generating index intelligence...</div>
-      <div class="ai-body" id="index-ai-body"><p><span class="spin"></span>&nbsp; Analysing SSI index performance data...</p></div>
+      <div class="ai-lbl">AI Index Commentary</div>
+      <div class="ai-title" id="idx-ai-title">Generating index analysis...</div>
+      <div class="ai-body" id="idx-ai-body"><p><span class="spin"></span> Analysing index performance data...</p></div>
     </div>
-  </div>
+  </main>
 </div>
 
-<!-- ═══ MACRO ═══ -->
+<!-- ═══ PAGE: MACRO ═══ -->
 <div class="page" id="page-macro">
-  <div class="page-header dark">
-    <div style="max-width:1280px;margin:0 auto;">
-      <div class="ph-sub">SoSoValue Macro Module · Economic Calendar</div>
-      <div class="ph-title" style="color:var(--paper)">Macro Event Calendar</div>
+  <div class="ph">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="ph-sub">SoSoValue Macro Intelligence</div>
+      <div class="ph-title">Macro Calendar</div>
     </div>
   </div>
-  <div class="macro-layout" id="macro-layout">
-    <div>
-      <div class="macro-cal">
-        <div class="macro-cal-header">Upcoming Events</div>
-        <div id="macro-cal-body"><div style="padding:1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);">Loading...</div></div>
-      </div>
+  <main class="container" style="padding-top:1.8rem;padding-bottom:3rem">
+    <div class="sec-label">Upcoming Macro Events</div>
+    <div id="macro-cal"></div>
+    <div class="ai-box" style="margin-top:1.5rem">
+      <div class="ai-lbl">AI Macro Analysis</div>
+      <div class="ai-title" id="mac-ai-title">Analysing macro calendar...</div>
+      <div class="ai-body" id="mac-ai-body"><p><span class="spin"></span> Processing macro event data...</p></div>
     </div>
-    <div class="macro-detail">
-      <div class="macro-detail-header">Event Intelligence</div>
-      <div id="macro-events-detail"><div style="font-size:0.85rem;color:var(--muted);">Select a date to view events and AI analysis.</div></div>
-    </div>
-  </div>
+  </main>
 </div>
 
-<!-- ═══ RESEARCH ═══ -->
+<!-- ═══ PAGE: RESEARCH ═══ -->
 <div class="page" id="page-research">
-  <div class="page-header" style="background:var(--cream);border-bottom:1px solid var(--rule);padding:2rem 2rem;">
-    <div style="max-width:1280px;margin:0 auto;">
-      <div class="ph-sub" style="color:var(--muted);">SoSoValue Featured News · Research & Analysis</div>
-      <div class="ph-title">Research Dispatches</div>
+  <div class="ph">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="ph-sub">SoSoValue Research Feed</div>
+      <div class="ph-title">Research & Analysis</div>
     </div>
   </div>
-  <div class="research-grid" id="research-grid">
-    <div class="research-card"><div class="shimmer" style="height:200px">&nbsp;</div></div>
-    <div class="research-card"><div class="shimmer" style="height:200px">&nbsp;</div></div>
-    <div class="research-card"><div class="shimmer" style="height:200px">&nbsp;</div></div>
-    <div class="research-card"><div class="shimmer" style="height:200px">&nbsp;</div></div>
-  </div>
+  <main class="container" style="padding-top:1.8rem;padding-bottom:3rem">
+    <div class="res-grid" id="res-grid"><div class="shim" style="height:200px"></div><div class="shim" style="height:200px"></div><div class="shim" style="height:200px"></div><div class="shim" style="height:200px"></div></div>
+  </main>
 </div>
 
-<!-- ═══ SODEX TERMINAL ═══ -->
+<!-- ═══ PAGE: SODEX TERMINAL ═══ -->
 <div class="page" id="page-sodex">
-  <div class="sodex-header">
-    <div style="max-width:1280px;margin:0 auto;">
-      <div class="sodex-badge">⚡ SoDEX Testnet · ValueChain Layer 1 · testnet-gw.sodex.dev</div>
-      <div class="sodex-title">SoDEX Trading Terminal</div>
-      <div class="sodex-sub">Live orderbook · Real-time price feeds · Execution module · Powered by SoDEX Testnet REST API</div>
+  <div class="ph">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="ph-sub">SoDEX Testnet · Live Market Data</div>
+      <div class="ph-title">SoDEX Terminal</div>
     </div>
   </div>
-  <div class="sodex-content">
-    <div class="sodex-grid">
-      <!-- LEFT: Market Data -->
-      <div>
-        <div class="s-panel" style="margin-bottom:1.5rem;">
-          <div class="s-panel-title">
-            <span>Live Market Data</span>
-            <div style="display:flex;align-items:center;gap:0.5rem;"><div class="s-live"></div><span style="font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(245,240,232,0.3);">testnet-gw.sodex.dev</span></div>
-          </div>
-          <div class="sym-tabs" id="sym-tabs">
-            <div class="sym-tab active" onclick="switchSym('vBTC_vUSDC')">vBTC/vUSDC</div>
-            <div class="sym-tab" onclick="switchSym('vETH_vUSDC')">vETH/vUSDC</div>
-            <div class="sym-tab" onclick="switchSym('SOSO_vUSDC')">SOSO/vUSDC</div>
-          </div>
-          <div class="sodex-price" id="sdx-price">—</div>
-          <div class="sodex-price-chg" id="sdx-chg"></div>
-          <div class="s-stats" id="sdx-stats">
-            <div class="s-stat"><div class="s-stat-lbl">24h High</div><div class="s-stat-val" id="sdx-high">—</div></div>
-            <div class="s-stat"><div class="s-stat-lbl">24h Low</div><div class="s-stat-val" id="sdx-low">—</div></div>
-            <div class="s-stat"><div class="s-stat-lbl">24h Volume</div><div class="s-stat-val" id="sdx-vol">—</div></div>
-            <div class="s-stat"><div class="s-stat-lbl">Best Ask</div><div class="s-stat-val" id="sdx-ask" style="color:var(--red)">—</div></div>
-          </div>
-        </div>
-
-        <!-- Orderbook -->
-        <div class="s-panel" style="margin-bottom:1.5rem;">
-          <div class="s-panel-title"><span>Order Book</span><span style="font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(245,240,232,0.3);">/markets/{symbol}/orderbook</span></div>
-          <div class="ob-grid">
-            <div>
-              <div class="ob-col-title ob-ask-title">Asks (Sell)</div>
-              <div id="ob-asks"></div>
-            </div>
-            <div>
-              <div class="ob-col-title ob-bid-title">Bids (Buy)</div>
-              <div id="ob-bids"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Recent Trades -->
-        <div class="s-panel">
-          <div class="s-panel-title"><span>Recent Trades</span><span style="font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(245,240,232,0.3);">/markets/{symbol}/trades</span></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(245,240,232,0.3);padding:0.2rem 0;margin-bottom:0.3rem;">
-            <span>Price</span><span style="text-align:center">Size</span><span style="text-align:right">Time</span>
-          </div>
-          <div id="recent-trades"></div>
+  <div class="sdx-layout">
+    <div class="sdx-main">
+      <div class="sym-tabs" id="sym-tabs">
+        <button class="sym-tab active" onclick="switchSym('vBTC_vUSDC')">vBTC/vUSDC</button>
+        <button class="sym-tab" onclick="switchSym('vETH_vUSDC')">vETH/vUSDC</button>
+        <button class="sym-tab" onclick="switchSym('SOSO_vUSDC')">SOSO/vUSDC</button>
+      </div>
+      <div class="sdx-price-box">
+        <div class="sdx-price" id="sdx-price">—</div>
+        <div class="sdx-chg" id="sdx-chg"></div>
+        <div class="sdx-stats">
+          <div class="sdx-stat"><div class="sdx-stat-lbl">24h High</div><div class="sdx-stat-val" id="sdx-high">—</div></div>
+          <div class="sdx-stat"><div class="sdx-stat-lbl">24h Low</div><div class="sdx-stat-val" id="sdx-low">—</div></div>
+          <div class="sdx-stat"><div class="sdx-stat-lbl">24h Volume</div><div class="sdx-stat-val" id="sdx-vol">—</div></div>
         </div>
       </div>
-
-      <!-- RIGHT: Trade Panel -->
-      <div>
-        <div class="s-panel" style="margin-bottom:1.5rem;">
-          <div class="s-panel-title">Place Order</div>
-          <div class="trade-tabs">
-            <div class="trade-tab buy active" id="tt-buy" onclick="setTradeSide('buy')">Buy</div>
-            <div class="trade-tab sell" id="tt-sell" onclick="setTradeSide('sell')">Sell</div>
-          </div>
-          <div class="ot-btns">
-            <div class="ot-btn active" id="ot-market" onclick="setOrderType('market')">Market</div>
-            <div class="ot-btn" id="ot-limit" onclick="setOrderType('limit')">Limit</div>
-          </div>
-          <div id="limit-price-wrap" style="display:none">
-            <div class="trade-lbl">Price (vUSDC)</div>
-            <input class="trade-input" id="limit-price" type="number" placeholder="0.00">
-          </div>
+      <div class="sec-label" style="margin-top:1rem">Order Book</div>
+      <div class="ob-wrap">
+        <div class="ob-header"><span class="ob-th">Price (USDC)</span><span class="ob-th">Amount</span><span class="ob-th">Total</span></div>
+        <div id="ob-asks"></div>
+        <div style="padding:.4rem .8rem;background:var(--cream);font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)" id="ob-spread">Spread: —</div>
+        <div id="ob-bids"></div>
+      </div>
+      <div class="sec-label">Recent Trades</div>
+      <div id="sdx-trades" style="border:1px solid var(--rule)"></div>
+    </div>
+    <div class="sdx-sidebar">
+      <div class="sec-label">Place Order</div>
+      <div class="trade-panel">
+        <div class="trade-tabs">
+          <button class="trade-tab buy active" id="ttab-buy" onclick="setTradeTab('buy')">Buy</button>
+          <button class="trade-tab sell" id="ttab-sell" onclick="setTradeTab('sell')">Sell</button>
+        </div>
+        <div class="trade-input-wrap">
+          <div class="trade-lbl">Order Type</div>
+          <select class="trade-input" id="order-type"><option value="market">Market</option><option value="limit">Limit</option></select>
+        </div>
+        <div class="trade-input-wrap" id="price-wrap" style="display:none">
+          <div class="trade-lbl">Price (USDC)</div>
+          <input class="trade-input" id="order-price" type="number" placeholder="0.00">
+        </div>
+        <div class="trade-input-wrap">
           <div class="trade-lbl">Amount</div>
-          <input class="trade-input" id="trade-qty" type="number" placeholder="0.00">
-          <div id="trade-total-row" style="font-family:'DM Mono',monospace;font-size:0.56rem;color:rgba(245,240,232,0.3);margin-bottom:0.6rem;display:flex;justify-content:space-between;">
-            <span>Estimated Total</span><span id="trade-total">—</span>
-          </div>
-          <button class="trade-execute-btn buy-btn" id="trade-btn" onclick="executeTrade()">Connect Wallet & Buy on SoDEX</button>
-          <div style="margin-top:0.8rem;font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(245,240,232,0.25);line-height:1.5;text-align:center;">
-            Testnet only · No real funds · EIP-712 signing via MetaMask
-          </div>
+          <input class="trade-input" id="order-qty" type="number" placeholder="0.00">
         </div>
-
-        <!-- SoSoValue News in context -->
-        <div class="s-panel">
-          <div class="s-panel-title">Related Intelligence · SoSoValue</div>
-          <div id="sdx-news"></div>
-        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);margin-top:.4rem">Est. Total: <span id="order-total">—</span></div>
+        <button class="trade-btn buy" id="trade-btn" onclick="execTrade()">Connect Wallet & Buy on SoDEX</button>
+      </div>
+      <div style="margin-top:1rem;padding:.9rem;background:var(--cream);border:1px solid var(--rule)">
+        <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">Related News</div>
+        <div id="sdx-news"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ AI BRIEFING ═══ -->
+<!-- ═══ PAGE: AI BRIEFING ═══ -->
 <div class="page" id="page-briefing">
   <div class="brief-page">
     <div class="brief-header">
-      <div class="brief-edition">Quasar Chronicle · AI Intelligence Edition · <span id="brief-date"></span></div>
+      <div class="brief-ed">Quasar Chronicle · AI Intelligence Edition · <span id="brief-date"></span></div>
       <div class="brief-title" id="brief-title">Loading today's edition...</div>
-      <div class="brief-meta">Generated autonomously · SoSoValue Data × Groq AI · quasar-chronicle.vercel.app</div>
+      <div class="brief-meta">Generated autonomously · Powered by SoSoValue Data × Groq AI</div>
     </div>
     <div class="brief-content">
-      <div class="brief-sigs">
-        <div class="sig-card"><div class="sig-lbl">BTC Price</div><div class="sig-val" id="sig-btc">—</div><div class="sig-sub" id="sig-btc-chg" style="color:rgba(245,240,232,0.35)"></div></div>
-        <div class="sig-card"><div class="sig-lbl">Sentiment</div><div class="sig-val" id="sig-sent">—</div><div class="sig-sub" style="color:rgba(245,240,232,0.35)">24h composite</div></div>
-        <div class="sig-card"><div class="sig-lbl">BTC ETF Flow</div><div class="sig-val" id="sig-etf">—</div><div class="sig-sub" id="sig-etf-sub" style="color:rgba(245,240,232,0.35)"></div></div>
+      <div class="sig-grid">
+        <div class="sig-card"><div class="sig-lbl">BTC Price</div><div class="sig-val" id="sig-btc">—</div><div class="sig-sub" id="sig-btc-chg" style="color:rgba(245,240,232,.4)"></div></div>
+        <div class="sig-card"><div class="sig-lbl">Market Sentiment</div><div class="sig-val" id="sig-sent">—</div><div class="sig-sub" style="color:rgba(245,240,232,.4)">24h composite</div></div>
+        <div class="sig-card"><div class="sig-lbl">BTC ETF Daily Flow</div><div class="sig-val" id="sig-etf">—</div><div class="sig-sub" id="sig-etf-sub" style="color:rgba(245,240,232,.4)"></div></div>
       </div>
       <div class="brief-sec">Market Conditions</div>
-      <div id="brief-conditions"><p class="brief-para"><span class="spin"></span>&nbsp; Composing intelligence briefing...</p></div>
+      <div id="brief-conditions"><p class="brief-p"><span class="spin"></span> Composing intelligence briefing from SoSoValue data...</p></div>
       <div class="brief-sec">Key Developments</div>
       <div id="brief-developments"></div>
-      <div id="brief-pullquote"></div>
+      <div id="brief-pq-wrap"></div>
       <div class="brief-sec">Forward Outlook</div>
       <div id="brief-outlook"></div>
-      <div class="brief-sec">Top SoSoValue Headlines</div>
-      <div id="brief-headlines" style="margin-bottom:2rem;"></div>
+      <div class="brief-sec">Top Headlines · SoSoValue</div>
+      <div id="brief-headlines" style="margin-bottom:2rem"></div>
     </div>
     <div class="brief-footer">
-      Quasar Chronicle Intelligence Desk · Autonomous On-Chain Financial Publishing<br>
-      <div style="margin-top:0.8rem;display:flex;justify-content:center;gap:1rem;">
-        <a href="https://twitter.com/intent/tweet?text=Reading%20today%27s%20AI%20market%20briefing%20on%20Quasar%20Chronicle%20%E2%80%94%20powered%20by%20%40sosovaluecrypto&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" style="color:rgba(245,240,232,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:0.25rem 0.7rem;font-size:0.54rem;">𝕏 Share</a>
-        <a onclick="navigator.clipboard.writeText('https://quasar-chronicle.vercel.app').then(()=>alert('Copied!'))" style="color:rgba(245,240,232,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:0.25rem 0.7rem;font-size:0.54rem;cursor:pointer;">⎘ Copy</a>
+      Quasar Chronicle Intelligence Desk · quasar-chronicle.vercel.app
+      <div class="share-row">
+        <a href="https://twitter.com/intent/tweet?text=Reading%20today%27s%20AI%20market%20briefing%20on%20Quasar%20Chronicle%20%E2%80%94%20powered%20by%20%40sosovaluecrypto&url=https%3A%2F%2Fquasar-chronicle.vercel.app" target="_blank" class="share-btn">𝕏 Share on X</a>
+        <a onclick="navigator.clipboard.writeText('https://quasar-chronicle.vercel.app').then(function(){alert('Link copied!')})" class="share-btn">⎘ Copy Link</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ HOW IT WORKS ═══ -->
+<!-- ═══ PAGE: HOW IT WORKS ═══ -->
 <div class="page" id="page-howitworks">
-  <div class="hiw-header">
-    <div style="max-width:960px;margin:0 auto;">
-      <div class="ph-sub" style="color:rgba(245,240,232,0.5)">Technical Architecture · Wave 2</div>
-      <div class="ph-title" style="color:var(--paper)">How Quasar Chronicle Works</div>
-      <div style="font-family:'DM Sans',sans-serif;font-size:0.9rem;color:rgba(245,240,232,0.65);margin-top:0.5rem;max-width:580px;line-height:1.7;">An autonomous financial publishing pipeline — SoSoValue's 9-module API + SoDEX trading infrastructure + Groq AI editorial engine — zero human intervention required.</div>
+  <div class="ph"><div style="max-width:900px;margin:0 auto"><div class="ph-sub">Technical Architecture</div><div class="ph-title">How Quasar Chronicle Works</div></div></div>
+  <div class="hiw-wrap">
+    <div class="hiw-step">
+      <div class="hiw-num" style="background:var(--ink);color:var(--gold)">1</div>
+      <div>
+        <div class="hiw-lbl">Data Ingestion</div>
+        <div class="hiw-hed">SoSoValue Open API</div>
+        <div class="hiw-txt">All market intelligence originates from SoSoValue's API — the most comprehensive on-chain financial data platform available. Three endpoints power the entire product.</div>
+        <div class="ep-card"><div class="ep-lbl">News & Research Feed</div><div class="ep-code">GET /api/v1/news/featured?pageNum=1&pageSize=20&categoryList=1,2</div><div class="ep-desc">Powers hero lead story, three-column news grid, story list, and Research tab. Returns curated news categorised by type and asset.</div></div>
+        <div class="ep-card"><div class="ep-lbl">ETF Flow Data</div><div class="ep-code">GET /api/v1/etf/summary</div><div class="ep-desc">Powers ETF Watch dashboard and Markets sidebar. Returns BTC & ETH ETF AUM, daily flows, 7-day and 30-day flow data.</div></div>
+        <div class="ep-card"><div class="ep-lbl">Authentication</div><div class="ep-code">Header: x-soso-api-key: [KEY]</div><div class="ep-desc">All requests authenticated via SoSoValue Beta API key. Rate limit: 10 calls/min. Access via sosovalue.com/developer.</div></div>
+      </div>
     </div>
-  </div>
-  <div class="hiw-content">
-    <div class="sec-label" style="margin-top:0">SoSoValue API · 9 Modules Used</div>
-
-    <div class="api-card"><div class="api-card-module">Module 1 · Feeds</div><code class="api-card-ep">GET /openapi/v1/news/featured · GET /openapi/v1/news/hot</code><div class="api-card-desc">Powers the Markets hero story, three-column news grid, story list, and Research page. Featured news returns editorially curated articles with feature images, author data, and matched currencies. Real-time update frequency.</div></div>
-
-    <div class="api-card"><div class="api-card-module">Module 2 · ETF</div><code class="api-card-ep">GET /openapi/v1/etfs/summary-history · GET /openapi/v1/etfs · GET /openapi/v1/etfs/{ticker}/market-snapshot · GET /openapi/v1/etfs/{ticker}/history</code><div class="api-card-desc">Powers the entire ETF Watch page — aggregate summary stats, 30-day historical inflow chart, individual ETF product cards with AUM and flow metrics. BTC, ETH, SOL, XRP ETF data available.</div></div>
-
-    <div class="api-card"><div class="api-card-module">Module 3 · SoSoValue Index</div><code class="api-card-ep">GET /openapi/v1/indices · GET /openapi/v1/indices/{ticker}/market-snapshot · GET /openapi/v1/indices/{ticker}/constituents</code><div class="api-card-desc">Powers the Index Desk page with live SSI index prices, returns (7d/1m/3m/1y/YTD), and constituent weights for MAG7.ssi, Layer1.ssi and other SoSoValue proprietary indices.</div></div>
-
-    <div class="api-card"><div class="api-card-module">Module 4 · Currency & Market Data</div><code class="api-card-ep">GET /openapi/v1/currencies/{id}/market-snapshot · GET /openapi/v1/currencies/{id}/klines</code><div class="api-card-desc">Powers the market snapshot cells (price, 24h change, high/low, market cap, ATH) and the 7-day price chart for BTC, ETH, SOL, BNB. Watchlist filtering uses currency IDs to personalise the news feed.</div></div>
-
-    <div class="api-card"><div class="api-card-module">Module 5 · Macro</div><code class="api-card-ep">GET /openapi/v1/macro/events</code><div class="api-card-desc">Powers the Macro page economic calendar — Fed meetings, CPI releases, NFP, and other macroeconomic events. AI generates contextual analysis for each upcoming event using this data as input.</div></div>
-
-    <div class="api-card sodex-api-card"><div class="api-card-module" style="color:var(--sodex-dim)">SoDEX API · Execution Module</div><code class="api-card-ep" style="color:var(--sodex-dim)">GET testnet-gw.sodex.dev/api/v1/spot/markets/tickers · GET /markets/{symbol}/orderbook · GET /markets/{symbol}/trades</code><div class="api-card-desc">Powers the SoDEX Terminal — live ticker prices, real-time orderbook depth (8 levels bid/ask), recent trade history. Trade execution routes to SoDEX via EIP-712 wallet signing. ValueChain Layer 1 testnet.</div></div>
-
-    <div class="api-card" style="border-left-color:var(--live)"><div class="api-card-module" style="color:var(--live-dim, #1a7a44)">AI Editorial Engine</div><code class="api-card-ep" style="color:var(--live-dim, #1a7a44)">Groq API · LLaMA 3.3 70B · POST /api/brief (Vercel proxy)</code><div class="api-card-desc">All SoSoValue data feeds are synthesised by the AI editorial engine to produce lead stories, daily briefings, ETF analysis, index commentary, and macro event interpretation. The proxy keeps API keys secure server-side.</div></div>
-
-    <div style="margin-top:2rem;background:var(--ink);color:var(--paper);padding:1.5rem;text-align:center;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Built for the SoSoValue × SoDEX Buildathon · Wave 2</div>
-      <div style="font-size:0.85rem;color:rgba(245,240,232,0.55);margin-bottom:1rem;">One person. Nine API modules. One autonomous financial empire.</div>
-      <div style="display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;">
-        <a href="https://github.com/S0Mszn/quasar-chronicle" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.35rem 0.9rem;">GitHub ↗</a>
-        <a href="https://sosovalue-1.gitbook.io/sosovalue-api-doc" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.35rem 0.9rem;">SoSoValue API Docs ↗</a>
-        <a href="https://sodex.com/documentation/api/rest-v1" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.35rem 0.9rem;">SoDEX API Docs ↗</a>
-        <a onclick="nav('markets')" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:0.35rem 0.9rem;cursor:pointer;">Live Product ↗</a>
+    <div class="hiw-step">
+      <div class="hiw-num" style="background:var(--gold);color:var(--ink)">2</div>
+      <div>
+        <div class="hiw-lbl">Execution Layer</div>
+        <div class="hiw-hed">SoDEX Testnet Integration</div>
+        <div class="hiw-txt">The SoDEX Terminal connects to SoDEX's testnet REST API for live orderbook data, real-time tickers, and trade execution routing.</div>
+        <div class="ep-card"><div class="ep-lbl">Market Tickers</div><div class="ep-code">GET /api/v1/spot/markets/tickers</div><div class="ep-desc">Live price, 24h change, volume for vBTC/vUSDC, vETH/vUSDC, SOSO/vUSDC pairs.</div></div>
+        <div class="ep-card"><div class="ep-lbl">Order Book</div><div class="ep-code">GET /api/v1/spot/markets/{symbol}/orderbook</div><div class="ep-desc">Real-time bid/ask depth for selected trading pair. 8 levels each side.</div></div>
+        <div class="ep-card"><div class="ep-lbl">Trade Execution</div><div class="ep-code">POST /api/v1/spot/orders (EIP-712 signed)</div><div class="ep-desc">Trade panel prepares and routes orders to SoDEX for wallet-signed execution. Connect MetaMask to complete trades on SoDEX testnet.</div></div>
+      </div>
+    </div>
+    <div class="hiw-step">
+      <div class="hiw-num" style="background:var(--live);color:var(--ink)">3</div>
+      <div>
+        <div class="hiw-lbl">AI Editorial Engine</div>
+        <div class="hiw-hed">Groq AI — LLaMA 3.3 70B</div>
+        <div class="hiw-txt">SoSoValue data is synthesised into original financial journalism via a secure Vercel serverless proxy. The AI generates lead stories, daily briefings, ETF analysis, index commentary, and macro interpretation — autonomously on every request.</div>
+        <div class="ep-card" style="border-left-color:var(--live)"><div class="ep-lbl">Autonomous Pipeline</div><div class="ep-code">SoSoValue APIs → AI Prompt → Groq LLaMA 3.3 70B → Published Article</div><div class="ep-desc">Zero human editorial intervention. Every briefing is generated fresh from live SoSoValue data on every page load.</div></div>
+      </div>
+    </div>
+    <div class="sec-label" style="margin-top:1.5rem">Full Tech Stack</div>
+    <div class="stack-table">
+      <div class="stack-head"><span class="stack-th">Layer</span><span class="stack-th">Technology</span><span class="stack-th">Purpose</span></div>
+      <div class="stack-row" style="background:var(--cream)"><span class="stack-td">Data</span><span class="stack-td stack-tech">SoSoValue Open API</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">Live news, ETF flows, market intelligence</span></div>
+      <div class="stack-row"><span class="stack-td">Execution</span><span class="stack-td stack-tech">SoDEX Testnet API</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">Orderbook, tickers, trade routing</span></div>
+      <div class="stack-row" style="background:var(--cream)"><span class="stack-td">AI</span><span class="stack-td stack-tech">Groq — LLaMA 3.3 70B</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">Article generation, briefing synthesis</span></div>
+      <div class="stack-row"><span class="stack-td">Frontend</span><span class="stack-td stack-tech">HTML5 / CSS3 / JS</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">Zero-framework, fast, single-file</span></div>
+      <div class="stack-row" style="background:var(--cream)"><span class="stack-td">Backend</span><span class="stack-td stack-tech">Vercel Serverless</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">AI proxy, edge deployment, CDN</span></div>
+      <div class="stack-row"><span class="stack-td">Roadmap</span><span class="stack-td stack-tech">ValueChain (EVM)</span><span class="stack-td" style="font-size:.7rem;color:#3a3a45">Token-gated access, on-chain publishing</span></div>
+    </div>
+    <div style="margin-top:2rem;padding:1.5rem;background:var(--ink);color:var(--paper);text-align:center">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem">Built for the SoSoValue × SoDEX Buildathon</div>
+      <div style="font-size:.85rem;color:rgba(245,240,232,.6);margin-bottom:1rem">One person. One idea. One autonomous financial media empire.</div>
+      <div style="display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap">
+        <a href="https://github.com/S0Mszn/quasar-chronicle" target="_blank" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gdim);padding:.35rem .9rem">GitHub ↗</a>
+        <a href="https://sosovalue.com/developer" target="_blank" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gdim);padding:.35rem .9rem">SoSoValue API ↗</a>
+        <a onclick="nav('markets')" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--gdim);padding:.35rem .9rem;cursor:pointer">Live Product ↗</a>
       </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <div><strong>Quasar Chronicle</strong> — Autonomous On-Chain Financial Intelligence · Wave 2</div>
-  <p>Powered by SoSoValue API (9 modules) × SoDEX Testnet × Groq AI · SoSoValue × SoDEX Buildathon</p>
-  <p style="margin-top:0.4rem;opacity:0.35;">AI-generated content. Not financial advice.</p>
+  <div><strong>Quasar Chronicle</strong> — Autonomous On-Chain Financial Intelligence</div>
+  <p>Powered by SoSoValue API &amp; Groq AI (LLaMA 3.3 70B) · Built for the SoSoValue × SoDEX Buildathon</p>
+  <p style="margin-top:.5rem;opacity:.35">AI-generated content. Not financial advice.</p>
 </footer>
 
 <script>
-// ════════════════════════════════════════════════
-//  CONFIG
-// ════════════════════════════════════════════════
-const SOSO_KEY  = 'SOSO-fd7d6b2071fb4d0cbadd0d869f835cd3';
-const SOSO_OLD  = 'https://openapi.sosovalue.com/api/v1';
-const SOSO_V1   = 'https://openapi.sosovalue.com/openapi/v1';
-const AI_BASE   = '/api/brief';
-const SODEX     = 'https://testnet-gw.sodex.dev/api/v1/spot';
-const CG_BASE   = 'https://api.coingecko.com/api/v3';
-let _sym = 'vBTC_vUSDC';   // default SoDEX pair
-let _sdxInterval = null;
+// ══════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════
+var SOSO_KEY = 'SOSO-fd7d6b2071fb4d0cbadd0d869f835cd3';
+var SOSO = 'https://openapi.sosovalue.com/api/v1';
+var SODEX = 'https://testnet-gw.sodex.dev/api/v1/spot';
+var AI = '/api/brief';
+var CG = 'https://api.coingecko.com/api/v3';
 
-// ════════════════════════════════════════════════
-//  NAVIGATION
-// ════════════════════════════════════════════════
-const PAGE_LOADERS = {
-  etfwatch:  () => { if(!window._etf)  loadEtfPage();   },
-  indexdesk: () => { if(!window._idx)  loadIndexPage();  },
-  macro:     () => { if(!window._mac)  loadMacroPage();  },
-  research:  () => { if(!window._res)  loadResearch();   },
-  sodex:     () => { if(!window._sdx)  loadSodexPage();  },
-  briefing:  () => { if(!window._brf)  loadBriefingPage(); },
+// State
+var _sym = 'vBTC_vUSDC';
+var _side = 'buy';
+var _wl = null;
+var _sdxTimer = null;
+var _chartCoin = 'bitcoin';
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+var PAGE_LOADERS = {
+  etfwatch: loadEtf,
+  indexdesk: loadIndex,
+  macro: loadMacro,
+  research: loadResearch,
+  sodex: loadSodex,
+  briefing: loadBriefing
 };
 
 function nav(name) {
-  try {
-    if (_sdxInterval && name !== 'sodex') { clearInterval(_sdxInterval); _sdxInterval = null; window._sdx = false; }
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-strip a').forEach(a => a.classList.remove('active'));
-    const page = document.getElementById('page-' + name);
-    if (!page) { console.error('Page not found:', name); return; }
-    page.classList.add('active');
-    const el = document.getElementById('nav-' + name);
-    if (el) el.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    PAGE_LOADERS[name]?.();
-  } catch(e) { console.error('nav error:', e); }
-}
-
-// ════════════════════════════════════════════════
-//  HELPERS
-// ════════════════════════════════════════════════
-const fmt  = n => { const a=Math.abs(n),s=n<0?'-':''; if(a>=1e9)return s+'$'+(a/1e9).toFixed(2)+'B'; if(a>=1e6)return s+'$'+(a/1e6).toFixed(2)+'M'; if(a>=1e3)return s+'$'+(a/1e3).toFixed(1)+'K'; return s+'$'+a.toFixed(2); };
-const fmtP = n => n>1000 ? '$'+n.toLocaleString('en-US',{maximumFractionDigits:0}) : '$'+parseFloat(n).toFixed(4);
-const pct  = n => { const v=parseFloat(n)*100; return (v>=0?'+':'')+v.toFixed(2)+'%'; };
-const ago  = ts => { const d=Date.now()-ts,h=Math.floor(d/3600000),m=Math.floor(d/60000); return h>0?h+'h ago':m+'m ago'; };
-const strip= h => { const t=document.createElement('div');t.innerHTML=h;return t.textContent||''; };
-const today= () => new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-const CATS = {1:'News',2:'Research',3:'Institution',4:'Insights',5:'Macro',6:'Macro Research',7:'Official',9:'Alert',10:'On-Chain'};
-
-async function soso(path, params={}, method='GET', body=null) {
-  // Direct browser call to SoSoValue — bypasses server entirely
-  // Uses proven Wave 1 old API format exclusively
-  const hdrs = {'Content-Type':'application/json','x-soso-api-key': SOSO_KEY};
-  const qs = Object.keys(params).length ? '?'+new URLSearchParams(params).toString() : '';
-  const opts = { method, headers: hdrs };
-  if (body) opts.body = JSON.stringify(body);
-  try {
-    const r = await fetch(`${SOSO_OLD}/${path}${qs}`, opts);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return r.json();
-  } catch(e) {
-    console.warn(`SoSoValue API call failed: ${path}`, e.message);
-    return null;
+  if (_sdxTimer && name !== 'sodex') {
+    clearInterval(_sdxTimer);
+    _sdxTimer = null;
   }
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+  var navLinks = document.querySelectorAll('.nav-strip a');
+  for (var i = 0; i < navLinks.length; i++) navLinks[i].classList.remove('active');
+  var page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+  var link = document.getElementById('nav-' + name);
+  if (link) link.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (PAGE_LOADERS[name]) PAGE_LOADERS[name]();
 }
 
-async function ai(prompt, maxTok=900) {
-  const r = await fetch(AI_BASE, {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ messages: [{ role:'user', content:prompt }] })
-  });
-  const d = await r.json();
-  return d.content?.[0]?.text || '';
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function fmt(n) {
+  var a = Math.abs(n || 0);
+  var s = n < 0 ? '-' : '';
+  if (a >= 1e9) return s + '$' + (a / 1e9).toFixed(2) + 'B';
+  if (a >= 1e6) return s + '$' + (a / 1e6).toFixed(2) + 'M';
+  if (a >= 1e3) return s + '$' + (a / 1e3).toFixed(1) + 'K';
+  return s + '$' + a.toFixed(2);
+}
+function fmtP(n) {
+  n = n || 0;
+  if (n > 1000) return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (n > 1) return '$' + n.toFixed(2);
+  return '$' + n.toFixed(6);
+}
+function today() {
+  return new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+}
+function ago(ts) {
+  var d = Date.now() - ts;
+  var h = Math.floor(d / 3600000);
+  var m = Math.floor(d / 60000);
+  return h > 0 ? h + 'h ago' : m + 'm ago';
+}
+function strip(h) {
+  var t = document.createElement('div');
+  t.innerHTML = h;
+  return t.textContent || t.innerText || '';
+}
+function el(id) { return document.getElementById(id); }
+function setEl(id, txt, color) {
+  var e = el(id);
+  if (!e) return;
+  e.textContent = txt;
+  if (color) e.style.color = color;
 }
 
-// ════════════════════════════════════════════════
-//  MARKET DATA (CoinGecko fallback + SoSoValue)
-// ════════════════════════════════════════════════
-let _mktData = null;
+var CATS = { 1: 'News', 2: 'Research', 3: 'Institution', 4: 'Insights', 5: 'Macro', 6: 'Macro Research', 10: 'On-Chain' };
 
-async function fetchMarket() {
-  try {
-    const r = await fetch(`${CG_BASE}/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true&include_high_24h=true&include_low_24h=true&include_market_cap=true`);
-    _mktData = await r.json();
-  } catch {
-    _mktData = { bitcoin:{usd:96500,usd_24h_change:1.8,usd_24h_high:97000,usd_24h_low:95000,usd_market_cap:1900000000000}, ethereum:{usd:3820,usd_24h_change:-0.9}, solana:{usd:178,usd_24h_change:1.2}, binancecoin:{usd:608,usd_24h_change:0.4} };
-  }
-  return _mktData;
-}
-
-function renderMarket(d) {
-  if (!d) return { avg:0, word:'Neutral', sentPct:50, btc:{usd:0} };
-  const coins = [{id:'bitcoin',sym:'BTC/USD'},{id:'ethereum',sym:'ETH/USD'},{id:'solana',sym:'SOL/USD'},{id:'binancecoin',sym:'BNB/USD'}];
-  document.getElementById('mkt-row').innerHTML = coins.map(c => {
-    const p=d[c.id]||{usd:0,usd_24h_change:0}; const chg=parseFloat(p.usd_24h_change||0).toFixed(2);
-    const cls=chg>=0?'up':'dn', arr=chg>=0?'▲':'▼';
-    const cap = p.usd_market_cap ? fmt(p.usd_market_cap) : '';
-    return `<div class="mkt-cell"><div class="mkt-coin">${c.sym}</div><div class="mkt-price">${fmtP(p.usd)}</div><div class="mkt-chg ${cls}">${arr} ${Math.abs(chg)}%</div>${cap?`<div class="mkt-sub">MCap: ${cap}</div>`:''}</div>`;
-  }).join('');
-
-  const changes = coins.map(c => parseFloat(d[c.id].usd_24h_change||0));
-  const avg = changes.reduce((a,b)=>a+b,0)/changes.length;
-  const sentPct = Math.min(100,Math.max(0,50+avg*5));
-  const col = sentPct>55?'var(--live)':sentPct<45?'var(--red)':'var(--gold)';
-  const word = sentPct>60?'Bullish':sentPct>52?'Cautiously Bullish':sentPct>48?'Neutral':sentPct>40?'Cautious':'Bearish';
-  document.getElementById('sent-fill').style.cssText = `width:${sentPct}%;background:${col}`;
-  document.getElementById('sent-txt').textContent = `${word} — ${sentPct.toFixed(0)}/100`;
-
-  // Ticker
-  const tStr = coins.map(c => {
-    const p=d[c.id], chg=parseFloat(p.usd_24h_change||0).toFixed(2);
-    const cls=chg>=0?'tick-up':'tick-dn', arr=chg>=0?'▲':'▼';
-    return `<span class="tick-item">${c.sym.split('/')[0]} ${fmtP(p.usd)} <span class="${cls}">${arr}${Math.abs(chg)}%</span></span>`;
-  }).join(' · ');
-  document.getElementById('ticker').innerHTML = tStr + '&nbsp;&nbsp;&nbsp;&nbsp;' + tStr;
-
-  return { avg, word, sentPct, btc: d.bitcoin };
-}
-
-// ════════════════════════════════════════════════
-//  WATCHLIST
-// ════════════════════════════════════════════════
-const COINS = [
-  { label:'All',    id: null },
-  { label:'BTC',    id: '1673723677362319866' },
-  { label:'ETH',    id: '1673723677362319867' },
-  { label:'SOL',    id: '1673723677362319868' },
-  { label:'BNB',    id: '1673723677362319870' },
+// ══════════════════════════════════════════════════════
+// DEMO DATA (shown when APIs unavailable)
+// ══════════════════════════════════════════════════════
+var DEMO_NEWS = [
+  { id: 'd1', category: 1, release_time: Date.now() - 3600000, tags: ['BTC', 'ETF'], source_link: 'https://sosovalue.com/research', title: 'Bitcoin Spot ETFs Record $2.1B Weekly Inflows as Institutional Demand Surges', content: '<p>United States spot Bitcoin exchange-traded funds posted their strongest weekly inflows in six weeks, with total net inflows exceeding $2.1 billion. BlackRock\'s IBIT led all products with $890 million in fresh capital.</p>' },
+  { id: 'd2', category: 2, release_time: Date.now() - 7200000, tags: ['ETH', 'DeFi'], source_link: 'https://sosovalue.com/research', title: 'Ethereum Layer-2 Ecosystem Reaches Record $60B TVL Amid Fee Compression', content: '<p>Total value locked across Ethereum scaling networks crossed $60 billion for the first time, driven by a surge in DeFi activity on Arbitrum and Base.</p>' },
+  { id: 'd3', category: 1, release_time: Date.now() - 10800000, tags: ['SOL', 'RWA'], source_link: 'https://sosovalue.com/research', title: 'Solana Emerges as Leading Chain for Real-World Asset Tokenization', content: '<p>Financial institutions are increasingly piloting real-world asset tokenization programs on Solana, attracted by its high-throughput architecture and low transaction costs.</p>' },
+  { id: 'd4', category: 2, release_time: Date.now() - 14400000, tags: ['Macro', 'Fed'], source_link: 'https://sosovalue.com/research', title: 'Federal Reserve Minutes Signal Patience; Crypto Markets Interpret as Dovish', content: '<p>The latest FOMC minutes revealed committee members are in no rush to raise rates further, a stance the crypto market has interpreted as favorable for risk assets.</p>' },
+  { id: 'd5', category: 1, release_time: Date.now() - 18000000, tags: ['SOSO', 'ValueChain'], source_link: 'https://sosovalue.com/research', title: 'SoSoValue Launches Full API Platform, Enabling One-Person Financial Empires', content: '<p>SoSoValue has opened its comprehensive API suite to developers, providing access to ETF flow data, curated news feeds, and market analytics.</p>' },
+  { id: 'd6', category: 2, release_time: Date.now() - 21600000, tags: ['Stablecoins', 'USDT'], source_link: 'https://sosovalue.com/research', title: 'Stablecoin Market Cap Tops $220B as Cross-Border Use Cases Expand', content: '<p>The aggregate market cap of stablecoins reached a new all-time high of $220 billion, with growth concentrated in USDT and USDC.</p>' },
+  { id: 'd7', category: 1, release_time: Date.now() - 25200000, tags: ['AI', 'Agents'], source_link: 'https://sosovalue.com/research', title: 'On-Chain AI Agents Begin Managing Real Portfolios as Regulatory Clarity Improves', content: '<p>Several DeFi protocols have deployed autonomous AI agents capable of managing on-chain investment portfolios without human intervention.</p>' },
+  { id: 'd8', category: 2, release_time: Date.now() - 28800000, tags: ['BNB', 'BSC'], source_link: 'https://sosovalue.com/research', title: 'BNB Chain Reports 4M Daily Active Addresses, Rivaling Ethereum', content: '<p>BNB Chain recorded over 4 million daily active addresses, placing it alongside Ethereum in terms of raw user engagement.</p>' },
+  { id: 'd9', category: 1, release_time: Date.now() - 32400000, tags: ['Index', 'SSI'], source_link: 'https://sosovalue.com/research', title: 'Crypto Index Funds See Record Demand as MAG7.ssi Surpasses $500M AUM', content: '<p>SoSoValue\'s MAG7.ssi index token surpassed $500 million in assets under management.</p>' }
 ];
-let _activeWl = null;
 
-function renderWatchlist() {
-  document.getElementById('wl-chips').innerHTML = COINS.map(c =>
-    `<div class="wl-chip${c.id===_activeWl?' active':''}" onclick="selectWl('${c.id}')">${c.label}</div>`
-  ).join('');
+var DEMO_ETF = [
+  { name: 'Bitcoin Spot ETFs', dailyFlow: 312400000, totalAum: 58200000000, sevenDayFlow: 1800000000, thirtyDayFlow: 6200000000 },
+  { name: 'Ethereum Spot ETFs', dailyFlow: -42100000, totalAum: 12700000000, sevenDayFlow: -180000000, thirtyDayFlow: 420000000 }
+];
+
+var DEMO_SDX = {
+  'vBTC_vUSDC': { lastPrice: '96420.50', priceChange: '1842.30', priceChangePercent: '1.95', highPrice: '97200.00', lowPrice: '94580.00', volume: '124.85' },
+  'vETH_vUSDC': { lastPrice: '3821.75', priceChange: '-34.20', priceChangePercent: '-0.89', highPrice: '3900.00', lowPrice: '3780.00', volume: '892.44' },
+  'SOSO_vUSDC': { lastPrice: '0.284000', priceChange: '0.012400', priceChangePercent: '4.57', highPrice: '0.292000', lowPrice: '0.268000', volume: '284500' }
+};
+
+// ══════════════════════════════════════════════════════
+// API CALLS
+// ══════════════════════════════════════════════════════
+function sosoFetch(path) {
+  return fetch(SOSO + path, { headers: { 'x-soso-api-key': SOSO_KEY } })
+    .then(function(r) { return r.json(); })
+    .catch(function() { return null; });
 }
 
-async function selectWl(id) {
-  _activeWl = id === 'null' ? null : id;
-  renderWatchlist();
-  const items = await fetchNews(_activeWl);
-  renderNews(items);
+function fetchMarket() {
+  return fetch(CG + '/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true&include_market_cap=true')
+    .then(function(r) { return r.json(); })
+    .catch(function() {
+      return { bitcoin: { usd: 96500, usd_24h_change: 1.8 }, ethereum: { usd: 3820, usd_24h_change: -0.9 }, solana: { usd: 178, usd_24h_change: 1.2 }, binancecoin: { usd: 608, usd_24h_change: 0.4 } };
+    });
 }
 
-// ════════════════════════════════════════════════
-//  NEWS
-// ════════════════════════════════════════════════
-async function fetchNews(currencyId=null) {
-  try {
-    // Use proven Wave 1 endpoint format
-    const hdrs = {'x-soso-api-key': SOSO_KEY};
-    let url;
-    if (currencyId) {
-      url = `${SOSO_OLD}/news/featured?pageNum=1&pageSize=20&categoryList=1,2&currencyId=${currencyId}`;
-    } else {
-      url = `${SOSO_OLD}/news/featured?pageNum=1&pageSize=20&categoryList=1,2`;
-    }
-    const r = await fetch(url, {headers: hdrs, mode:'cors'});
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
-    if (d?.code === 0 && d?.data?.list?.length) return d.data.list;
-    if (Array.isArray(d?.data)) return d.data;
-  } catch {}
-  return DEMO_NEWS;
+function fetchNews(currencyId) {
+  var url = '/news/featured?pageNum=1&pageSize=20&categoryList=1,2';
+  if (currencyId) url += '&currencyId=' + currencyId;
+  return sosoFetch(url).then(function(d) {
+    if (d && d.code === 0 && d.data && d.data.list && d.data.list.length) return d.data.list;
+    return DEMO_NEWS;
+  });
+}
+
+function fetchEtf() {
+  return sosoFetch('/etf/summary').then(function(d) {
+    if (d && d.code === 0 && d.data && d.data.length) return d.data;
+    return DEMO_ETF;
+  });
+}
+
+function fetchSdx(path) {
+  return fetch(SODEX + path, { headers: { 'Accept': 'application/json' } })
+    .then(function(r) { return r.json(); })
+    .then(function(d) { return d.data || d; })
+    .catch(function() { return null; });
+}
+
+function callAI(prompt, maxTokens) {
+  return fetch(AI, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: [{ role: 'user', content: prompt }], max_tokens: maxTokens || 800 })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) { return d.content && d.content[0] ? d.content[0].text : ''; })
+  .catch(function() { return ''; });
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER MARKET
+// ══════════════════════════════════════════════════════
+function renderMarket(d) {
+  if (!d) d = { bitcoin: { usd: 0, usd_24h_change: 0 }, ethereum: { usd: 0, usd_24h_change: 0 }, solana: { usd: 0, usd_24h_change: 0 }, binancecoin: { usd: 0, usd_24h_change: 0 } };
+  var coins = [{ id: 'bitcoin', sym: 'BTC/USD' }, { id: 'ethereum', sym: 'ETH/USD' }, { id: 'solana', sym: 'SOL/USD' }, { id: 'binancecoin', sym: 'BNB/USD' }];
+  var html = '';
+  var changes = [];
+  for (var i = 0; i < coins.length; i++) {
+    var p = d[coins[i].id] || { usd: 0, usd_24h_change: 0 };
+    var chg = parseFloat(p.usd_24h_change || 0).toFixed(2);
+    var cls = chg >= 0 ? 'up' : 'dn';
+    var arr = chg >= 0 ? '▲' : '▼';
+    changes.push(parseFloat(p.usd_24h_change || 0));
+    html += '<div class="mkt-cell"><div class="mkt-coin">' + coins[i].sym + '</div><div class="mkt-price">' + fmtP(p.usd) + '</div><div class="mkt-chg ' + cls + '">' + arr + ' ' + Math.abs(chg) + '%</div></div>';
+  }
+  el('mkt-row').innerHTML = html;
+
+  var avg = changes.reduce(function(a, b) { return a + b; }, 0) / changes.length;
+  var pct = Math.min(100, Math.max(0, 50 + avg * 5));
+  var col = pct > 55 ? 'var(--live)' : pct < 45 ? 'var(--red)' : 'var(--gold)';
+  var word = pct > 60 ? 'Bullish' : pct > 52 ? 'Cautiously Bullish' : pct > 48 ? 'Neutral' : pct > 40 ? 'Cautious' : 'Bearish';
+  el('sent-fill').style.cssText = 'width:' + pct + '%;background:' + col;
+  setEl('sent-txt', word + ' — ' + pct.toFixed(0) + '/100');
+
+  var tItems = coins.map(function(c) {
+    var p = d[c.id] || { usd: 0, usd_24h_change: 0 };
+    var chg = parseFloat(p.usd_24h_change || 0).toFixed(2);
+    var cls = chg >= 0 ? 't-up' : 't-dn';
+    var arr = chg >= 0 ? '▲' : '▼';
+    return '<span class="t-item">' + c.sym.split('/')[0] + ' ' + fmtP(p.usd) + ' <span class="' + cls + '">' + arr + Math.abs(chg) + '%</span></span>';
+  }).join(' · ');
+  el('ticker').innerHTML = tItems + '     ' + tItems;
+
+  return { avg: avg, word: word, pct: pct, btc: d.bitcoin || { usd: 0 } };
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER ETF SIDEBAR
+// ══════════════════════════════════════════════════════
+function renderEtfSidebar(data) {
+  if (!data || !data.length) return;
+  var html = '';
+  for (var i = 0; i < Math.min(2, data.length); i++) {
+    var e = data[i];
+    var pos = (e.dailyFlow || 0) >= 0;
+    var cls = pos ? 'inflow' : 'outflow';
+    var sign = pos ? '+' : '';
+    var bc = pos ? 'var(--live)' : 'var(--red)';
+    var bp = Math.min(100, Math.abs(e.dailyFlow || 0) / 1e8 * 10);
+    html += '<div class="etf-card"><div class="etf-name">' + (e.name || 'ETF') + '</div>';
+    html += '<div class="etf-row"><span class="etf-lbl">Daily Flow</span><span class="etf-val ' + cls + '">' + sign + fmt(e.dailyFlow || 0) + '</span></div>';
+    html += '<div class="etf-row" style="margin-top:.15rem"><span class="etf-lbl">Total AUM</span><span class="etf-val">' + fmt(e.totalAum || 0) + '</span></div>';
+    html += '<div class="bar-wrap"><div class="bar-fill" style="width:' + bp + '%;background:' + bc + '"></div></div></div>';
+  }
+  el('etf-sidebar').innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER NEWS
+// ══════════════════════════════════════════════════════
+function getContent(item) {
+  if (item.title) return { title: item.title, content: item.content || '' };
+  var ml = item.multilanguageContent || [];
+  var en = null;
+  for (var i = 0; i < ml.length; i++) { if (ml[i].language === 'en') { en = ml[i]; break; } }
+  return en || ml[0] || { title: 'Untitled', content: '' };
 }
 
 function renderNews(items) {
-  if (!items?.length) return '';
-  const hero = items[0];
-  document.getElementById('hero-hed').textContent = hero.title;
-  document.getElementById('hero-meta').textContent = `${CATS[hero.category]||'News'} · ${ago(hero.release_time)} · Source: SoSoValue`;
-  const bodyHtml = hero.content || `<p>${strip(hero.content||'').substring(0,300)}...</p>`;
-  document.getElementById('hero-body').innerHTML = bodyHtml + `<div class="news-src">📡 <a href="${hero.source_link||'https://sosovalue.com/research'}" target="_blank" style="color:var(--gold-dim)">Read full story on SoSoValue ↗</a></div>`;
+  if (!items || !items.length) return '';
+  var hero = items[0];
+  var hc = getContent(hero);
+  setEl('hero-hed', hc.title);
+  setEl('hero-meta', (CATS[hero.category] || 'News') + ' · ' + ago(hero.release_time || hero.releaseTime || Date.now()) + ' · Source: SoSoValue');
+  el('hero-body').innerHTML = hc.content || '<p>' + strip(hc.content || '') + '</p>';
 
-  document.getElementById('news-grid').innerHTML = items.slice(1,4).map(item => {
-    const imgHtml = item.feature_image ? `<img class="news-img" src="${item.feature_image}" alt="" loading="lazy" onerror="this.style.display='none'">` : '';
-    return `<div class="news-card" onclick="window.open('${item.source_link||'https://sosovalue.com/research'}','_blank')">
-      ${imgHtml}
-      <div class="news-cat">${CATS[item.category]||'News'}</div>
-      <div class="news-hed">${item.title}</div>
-      <div class="news-meta">${ago(item.release_time)} · ${(item.tags||[]).slice(0,2).join(', ')}</div>
-      <div class="news-snip">${strip(item.content||'').substring(0,110)}...</div>
-      <div class="news-src">📡 SoSoValue NewsFeed ↗</div>
-    </div>`;
-  }).join('');
+  var gridHtml = '';
+  for (var i = 1; i < Math.min(4, items.length); i++) {
+    var item = items[i];
+    var c = getContent(item);
+    var ts = item.release_time || item.releaseTime || Date.now();
+    var snip = strip(c.content || '').substring(0, 120);
+    var tags = (item.tags || []).slice(0, 2).join(', ');
+    gridHtml += '<div class="news-card" onclick="window.open(\'https://sosovalue.com/research\',\'_blank\')">';
+    gridHtml += '<div class="news-cat">' + (CATS[item.category] || 'News') + '</div>';
+    gridHtml += '<div class="news-hed">' + c.title + '</div>';
+    gridHtml += '<div class="news-meta">' + ago(ts) + (tags ? ' · ' + tags : '') + '</div>';
+    gridHtml += '<div class="news-snip">' + snip + '...</div>';
+    gridHtml += '<div class="news-src">📡 Source: <a href="https://sosovalue.com/research" target="_blank" onclick="event.stopPropagation()" style="color:var(--gdim);text-decoration:underline">SoSoValue NewsFeed ↗</a></div>';
+    gridHtml += '</div>';
+  }
+  el('news-grid').innerHTML = gridHtml;
 
-  document.getElementById('story-list').innerHTML = items.slice(4,9).map((item,i) =>
-    `<div class="story-row" onclick="window.open('${item.source_link||'https://sosovalue.com/research'}','_blank')">
-      <div class="story-num">0${i+1}</div>
-      <div class="story-hed">${item.title}</div>
-      <div class="story-tag">${CATS[item.category]||'News'}<br><span style="color:var(--gold-dim);font-size:0.46rem;">SoSoValue ↗</span></div>
-    </div>`
-  ).join('');
+  var listHtml = '';
+  for (var i = 4; i < Math.min(9, items.length); i++) {
+    var item = items[i];
+    var c = getContent(item);
+    listHtml += '<div class="story-row" onclick="window.open(\'https://sosovalue.com/research\',\'_blank\')">';
+    listHtml += '<div class="story-num">0' + (i - 3) + '</div>';
+    listHtml += '<div class="story-hed">' + c.title + '</div>';
+    listHtml += '<div class="story-tag">' + (CATS[item.category] || 'News') + '<br><span style="color:var(--gdim)">SoSoValue ↗</span></div>';
+    listHtml += '</div>';
+  }
+  el('story-list').innerHTML = listHtml;
 
-  return items.map(i => i.title).join('; ');
+  return items.map(function(i) { return getContent(i).title; }).join('; ');
 }
 
-// ════════════════════════════════════════════════
-//  ETF SIDEBAR
-// ════════════════════════════════════════════════
-function renderEtfSidebar(data) {
-  const box = document.getElementById('etf-sidebar');
-  if (!box || !data) return;
-  const arr = Array.isArray(data) ? data : [data];
-  if (!arr.length) return;
-  box.innerHTML = arr.slice(0,2).map(e => {
-    const pos = (e.dailyFlow||0) >= 0;
-    const cls = pos ? 'etf-inflow' : 'etf-outflow';
-    const sign = pos ? '+' : '';
-    const barColor = pos ? 'var(--live)' : '#e74c3c';
-    const barPct = Math.min(100, Math.abs(e.dailyFlow||0) / 1e8 * 10);
-    return '<div class="etf-card">'
-      + '<div class="etf-name">' + (e.name||'ETF') + '</div>'
-      + '<div class="etf-row"><span class="etf-label">Daily Flow</span><span class="etf-value ' + cls + '">' + sign + fmt(e.dailyFlow||0) + '</span></div>'
-      + '<div class="etf-row" style="margin-top:0.2rem"><span class="etf-label">Total AUM</span><span class="etf-value">' + fmt(e.totalAum||0) + '</span></div>'
-      + '<div class="etf-bar-wrap"><div class="etf-bar" style="width:' + barPct + '%;background:' + barColor + '"></div></div>'
-      + '</div>';
-  }).join('');
-}
-
-async function fetchEtfSummary() {
-  try {
-    const r = await fetch(`${SOSO_OLD}/etf/summary`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'});
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
-    if (d?.code === 0 && d?.data?.length) return d.data;
-    if (Array.isArray(d)) return d;
-  } catch {}
-  // Demo fallback
-  return [
-    { name:'Bitcoin Spot ETFs', ticker:'BTC ETFs', dailyFlow:312400000, totalAum:58200000000, sevenDayFlow:1800000000, thirtyDayFlow:6200000000 },
-    { name:'Ethereum Spot ETFs', ticker:'ETH ETFs', dailyFlow:-42100000, totalAum:12700000000, sevenDayFlow:-180000000, thirtyDayFlow:420000000 },
-  ];
-}
-
-
-async function loadChart(coinId) {
-  try {
-    const r = await fetch(`${CG_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=7&interval=daily`);
-    const d = await r.json();
-    const prices = (d.prices||[]).map(p => p[1]);
-    drawChart('priceChart', prices, prices[prices.length-1] >= prices[0]);
-  } catch {}
-}
-
+// ══════════════════════════════════════════════════════
+// PRICE CHART
+// ══════════════════════════════════════════════════════
 function drawChart(canvasId, values, up) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+  var canvas = el(canvasId);
+  if (!canvas || !values || !values.length) return;
   canvas.width = canvas.offsetWidth || 800;
-  const w=canvas.width, h=canvas.height;
-  const min=Math.min(...values), max=Math.max(...values), rng=max-min||1;
-  ctx.clearRect(0,0,w,h);
-  const color = up ? '#2ecc71' : '#e74c3c';
-  const grad = ctx.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0, up?'rgba(46,204,113,0.2)':'rgba(231,76,60,0.2)');
-  grad.addColorStop(1,'rgba(245,240,232,0)');
+  canvas.height = 80;
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  var min = Math.min.apply(null, values);
+  var max = Math.max.apply(null, values);
+  var range = max - min || 1;
+  var color = up ? '#2ecc71' : '#e74c3c';
+  ctx.clearRect(0, 0, w, h);
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, up ? 'rgba(46,204,113,.2)' : 'rgba(231,76,60,.2)');
+  grad.addColorStop(1, 'rgba(245,240,232,0)');
   ctx.beginPath();
-  values.forEach((v,i) => { const x=w*i/(values.length-1),y=h-(h*(v-min)/rng)*0.82-h*0.06; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
-  ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
-  ctx.fillStyle=grad; ctx.fill();
-  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.lineJoin='round';
-  values.forEach((v,i) => { const x=w*i/(values.length-1),y=h-(h*(v-min)/rng)*0.82-h*0.06; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  for (var i = 0; i < values.length; i++) {
+    var x = w * i / (values.length - 1);
+    var y = h - (h * (values[i] - min) / range) * 0.85 - h * 0.05;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+  for (var i = 0; i < values.length; i++) {
+    var x = w * i / (values.length - 1);
+    var y = h - (h * (values[i] - min) / range) * 0.85 - h * 0.05;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
   ctx.stroke();
 }
 
-function switchChart(coinId, btn) {
-  document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('cbtn-'+btn)?.classList.add('active');
+function loadChart(coinId) {
+  fetch(CG + '/coins/' + coinId + '/market_chart?vs_currency=usd&days=7&interval=daily')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var prices = (d.prices || []).map(function(p) { return p[1]; });
+      if (prices.length) drawChart('priceChart', prices, prices[prices.length - 1] >= prices[0]);
+    })
+    .catch(function() {});
+}
+
+function switchChart(coinId, btnId) {
+  _chartCoin = coinId;
+  var btns = ['btc', 'eth', 'sol'];
+  for (var i = 0; i < btns.length; i++) {
+    var b = el('cbtn-' + btns[i]);
+    if (b) b.className = 'chart-btn' + (btns[i] === btnId ? ' active' : '');
+  }
   loadChart(coinId);
 }
 
-// ════════════════════════════════════════════════
-//  ETF WATCH PAGE
-// ════════════════════════════════════════════════
-async function loadEtfPage() {
-  window._etf = true;
+// ══════════════════════════════════════════════════════
+// WATCHLIST
+// ══════════════════════════════════════════════════════
+var WL_OPTIONS = [
+  { label: 'All', id: null },
+  { label: 'BTC', id: 'BTC' },
+  { label: 'ETH', id: 'ETH' },
+  { label: 'SOL', id: 'SOL' }
+];
 
-  // Fetch ETF summary using Wave 1 proven endpoint
-  let etfData = [];
-  try {
-    const r = await fetch(`${SOSO_OLD}/etf/summary`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'});
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
-    if (d?.code === 0 && d?.data?.length) etfData = d.data;
-    else if (Array.isArray(d)) etfData = d;
-  } catch {}
-
-  // Demo fallback
-  if (!etfData.length) {
-    etfData = [
-      { name:'Bitcoin Spot ETFs', dailyFlow:312400000, totalAum:58200000000, sevenDayFlow:1800000000, thirtyDayFlow:6200000000 },
-      { name:'Ethereum Spot ETFs', dailyFlow:-42100000, totalAum:12700000000, sevenDayFlow:-180000000, thirtyDayFlow:420000000 },
-    ];
+function renderWatchlist() {
+  var box = el('wl-chips');
+  if (!box) return;
+  var html = '';
+  for (var i = 0; i < WL_OPTIONS.length; i++) {
+    var w = WL_OPTIONS[i];
+    var active = _wl === w.id ? ' active' : '';
+    html += '<button class="wl-chip' + active + '" onclick="setWl(' + (w.id ? '\'' + w.id + '\'' : 'null') + ')">' + w.label + '</button>';
   }
-
-  const btc = etfData[0]||{};
-  const eth = etfData[1]||{};
-  const combined = (btc.dailyFlow||0) + (eth.dailyFlow||0);
-
-  // Render summary strip
-  const btcAum = document.getElementById('btc-aum');
-  const ethAum = document.getElementById('eth-aum');
-  const combFlow = document.getElementById('combined-flow');
-  const flowSig = document.getElementById('flow-signal');
-  const btcFlow = document.getElementById('btc-flow');
-  const ethFlow = document.getElementById('eth-flow');
-
-  if (btcAum) btcAum.textContent = fmt(btc.totalAum||0);
-  if (ethAum) ethAum.textContent = fmt(eth.totalAum||0);
-  if (combFlow) { combFlow.textContent = `${combined>=0?'+':''}${fmt(combined)}`; combFlow.style.color = combined>=0?'var(--live)':'var(--red,#e74c3c)'; }
-  if (flowSig) { flowSig.textContent = combined>=0?'Net Institutional Inflow':'Net Institutional Outflow'; flowSig.style.color = combined>=0?'var(--live)':'var(--red,#e74c3c)'; }
-  if (btcFlow) { btcFlow.textContent = `Daily: ${(btc.dailyFlow||0)>=0?'+':''}${fmt(btc.dailyFlow||0)}`; btcFlow.style.color = (btc.dailyFlow||0)>=0?'var(--live)':'var(--red,#e74c3c)'; }
-  if (ethFlow) { ethFlow.textContent = `Daily: ${(eth.dailyFlow||0)>=0?'+':''}${fmt(eth.dailyFlow||0)}`; ethFlow.style.color = (eth.dailyFlow||0)>=0?'var(--live)':'var(--red,#e74c3c)'; }
-
-  // Render ETF cards
-  const grid = document.getElementById('etf-cards-grid');
-  if (grid) {
-    grid.innerHTML = etfData.slice(0,4).map(e => {
-      const pos = (e.dailyFlow||0)>=0, barColor = pos?'var(--live)':'var(--red,#e74c3c)';
-      const barPct = Math.min(100, Math.abs(e.dailyFlow||0)/5e8*100);
-      return `<div class="etf-full-card">
-        <div class="etf-full-name">${e.name||'ETF Product'}</div>
-        <div class="etf-full-ticker">Sourced from SoSoValue API</div>
-        <div class="etf-stats-grid">
-          <div class="etf-stat"><div class="etf-stat-label">Total AUM</div><div class="etf-stat-value">${fmt(e.totalAum||0)}</div></div>
-          <div class="etf-stat"><div class="etf-stat-label">Daily Net Flow</div><div class="etf-stat-value" style="color:${barColor}">${pos?'+':''}${fmt(e.dailyFlow||0)}</div></div>
-          <div class="etf-stat"><div class="etf-stat-label">7-Day Flow</div><div class="etf-stat-value" style="color:${(e.sevenDayFlow||0)>=0?'var(--live)':'var(--red,#e74c3c)'}">${(e.sevenDayFlow||0)>=0?'+':''}${fmt(e.sevenDayFlow||0)}</div></div>
-          <div class="etf-stat"><div class="etf-stat-label">30-Day Flow</div><div class="etf-stat-value" style="color:${(e.thirtyDayFlow||0)>=0?'var(--live)':'var(--red,#e74c3c)'}">${(e.thirtyDayFlow||0)>=0?'+':''}${fmt(e.thirtyDayFlow||0)}</div></div>
-        </div>
-        <div class="etf-flow-bar-container">
-          <div class="etf-flow-label"><span>Flow Intensity</span><span style="color:${barColor}">${pos?'Inflow':'Outflow'}</span></div>
-          <div class="etf-flow-track"><div class="etf-flow-fill" style="width:0%;background:${barColor}" data-width="${barPct}"></div></div>
-        </div>
-      </div>`;
-    }).join('');
-    setTimeout(()=>document.querySelectorAll('.etf-flow-fill').forEach(el=>{el.style.width=el.dataset.width+'%';}),100);
-  }
-
-  // Draw 30-day flow chart using demo data (replaced by API when available)
-  const chartCanvas = document.getElementById('etfHistChart');
-  if (chartCanvas) {
-    const days = 30;
-    const labels = Array.from({length:days},(_,i)=>{const d=new Date();d.setDate(d.getDate()-days+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});});
-    const btcFlows = Array.from({length:days},()=>Math.floor((Math.random()-0.35)*800000000));
-    drawFlowChart(chartCanvas, labels, btcFlows);
-  }
-
-  // AI ETF analysis
-  const etfAiTitle = document.getElementById('etf-ai-title');
-  const etfAiBody = document.getElementById('etf-ai-body');
-  const etfAiSig = document.getElementById('etf-ai-sig');
-  if (etfAiBody) {
-    const prompt = 'You are Quasar Chronicle ETF analyst. Write 3 paragraphs of institutional analysis. '
-      + 'BTC ETF AUM: ' + fmt(btc.totalAum||0) + ', Daily Flow: ' + fmt(btc.dailyFlow||0) + ', 7-Day: ' + fmt(btc.sevenDayFlow||0) + '. '
-      + 'ETH ETF AUM: ' + fmt(eth.totalAum||0) + ', Daily Flow: ' + fmt(eth.dailyFlow||0) + '. '
-      + 'Combined Daily Flow: ' + fmt(combined) + '. '
-      + 'Cover: (1) institutional sentiment, (2) BTC vs ETH divergence, (3) what to watch next. End with "— Quasar ETF Desk". Bloomberg authority.';
-    const txt = await ai(prompt, 800);
-    const lines = txt.trim().split('
-').filter(l=>l.trim());
-    if (etfAiTitle) etfAiTitle.textContent = `Institutional Flow Analysis — ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric'})}`;
-    if (etfAiBody) etfAiBody.innerHTML = lines.filter(l=>!l.startsWith('—')).map(l=>`<p>${l}</p>`).join('');
-    if (etfAiSig) etfAiSig.textContent = lines.find(l=>l.startsWith('—'))||'';
-  }
+  box.innerHTML = html;
 }
 
-function drawFlowChart(canvas, labels, values) {
-  canvas.width = canvas.offsetWidth || 800;
-  canvas.height = 120;
-  const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
-  const min = Math.min(...values), max = Math.max(...values), range = max - min || 1;
-  const zero = h - (h * (0 - min) / range);
-  ctx.clearRect(0, 0, w, h);
-  // Zero line
-  ctx.strokeStyle = 'rgba(10,10,15,0.15)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(0, zero); ctx.lineTo(w, zero); ctx.stroke();
-  // Bars
-  const bw = w / values.length - 1;
-  values.forEach((v, i) => {
-    const x = i * (bw + 1);
-    const barH = Math.abs(h * (v - 0) / range);
-    const y = v >= 0 ? zero - barH : zero;
-    ctx.fillStyle = v >= 0 ? 'rgba(46,204,113,0.7)' : 'rgba(231,76,60,0.7)';
-    ctx.fillRect(x, y, bw, barH);
+function setWl(id) {
+  _wl = id;
+  renderWatchlist();
+  fetchNews(id).then(function(items) { renderNews(items); });
+}
+
+// ══════════════════════════════════════════════════════
+// HOME BRIEFING
+// ══════════════════════════════════════════════════════
+function renderHomeBriefing(text) {
+  if (!text) {
+    setEl('home-brief-title', 'Markets Digest — AI Briefing');
+    el('home-brief-body').innerHTML = '<p>Live AI briefing temporarily unavailable.</p>';
+    return;
+  }
+  var lines = text.trim().split('\n').filter(function(l) { return l.trim(); });
+  var title = lines[0].replace(/^#+\s*/, '').replace(/\*\*/g, '');
+  var body = lines.slice(1).filter(function(l) { return !l.startsWith('—'); }).map(function(l) { return '<p>' + l.replace(/\*\*/g, '') + '</p>'; }).join('');
+  var sig = '';
+  for (var i = 0; i < lines.length; i++) { if (lines[i].startsWith('—')) { sig = lines[i]; break; } }
+  setEl('home-brief-title', title);
+  el('home-brief-body').innerHTML = body;
+  setEl('home-brief-sig', sig);
+}
+
+// ══════════════════════════════════════════════════════
+// ETF PAGE
+// ══════════════════════════════════════════════════════
+var _etfLoaded = false;
+function loadEtf() {
+  if (_etfLoaded) return;
+  _etfLoaded = true;
+  fetchEtf().then(function(data) {
+    var btc = data[0] || {};
+    var eth = data[1] || {};
+    var combined = (btc.dailyFlow || 0) + (eth.dailyFlow || 0);
+    setEl('ph-btc-aum', fmt(btc.totalAum || 0));
+    setEl('ph-eth-aum', fmt(eth.totalAum || 0));
+    var btcFlowTxt = 'Daily: ' + ((btc.dailyFlow || 0) >= 0 ? '+' : '') + fmt(btc.dailyFlow || 0);
+    setEl('ph-btc-flow', btcFlowTxt, (btc.dailyFlow || 0) >= 0 ? 'var(--live)' : 'var(--red)');
+    var ethFlowTxt = 'Daily: ' + ((eth.dailyFlow || 0) >= 0 ? '+' : '') + fmt(eth.dailyFlow || 0);
+    setEl('ph-eth-flow', ethFlowTxt, (eth.dailyFlow || 0) >= 0 ? 'var(--live)' : 'var(--red)');
+    var combTxt = (combined >= 0 ? '+' : '') + fmt(combined);
+    setEl('ph-combined', combTxt, combined >= 0 ? 'var(--live)' : 'var(--red)');
+    setEl('ph-flow-sig', combined >= 0 ? 'Net Institutional Inflow' : 'Net Institutional Outflow', combined >= 0 ? 'var(--live)' : 'var(--red)');
+
+    var cardsHtml = '';
+    for (var i = 0; i < Math.min(4, data.length); i++) {
+      var e = data[i];
+      var pos = (e.dailyFlow || 0) >= 0;
+      var bc = pos ? 'var(--live)' : 'var(--red)';
+      var bp = Math.min(100, Math.abs(e.dailyFlow || 0) / 5e8 * 100);
+      cardsHtml += '<div class="etfc"><div class="etfc-name">' + (e.name || 'ETF') + '</div>';
+      cardsHtml += '<div class="etfc-src">Sourced from SoSoValue Open API</div>';
+      cardsHtml += '<div class="etfc-stats">';
+      cardsHtml += '<div class="etfc-stat"><div class="etfc-stat-lbl">Total AUM</div><div class="etfc-stat-val">' + fmt(e.totalAum || 0) + '</div></div>';
+      cardsHtml += '<div class="etfc-stat"><div class="etfc-stat-lbl">Daily Flow</div><div class="etfc-stat-val" style="color:' + bc + '">' + (pos ? '+' : '') + fmt(e.dailyFlow || 0) + '</div></div>';
+      cardsHtml += '<div class="etfc-stat"><div class="etfc-stat-lbl">7-Day Flow</div><div class="etfc-stat-val" style="color:' + ((e.sevenDayFlow || 0) >= 0 ? 'var(--live)' : 'var(--red)') + '">' + ((e.sevenDayFlow || 0) >= 0 ? '+' : '') + fmt(e.sevenDayFlow || 0) + '</div></div>';
+      cardsHtml += '<div class="etfc-stat"><div class="etfc-stat-lbl">30-Day Flow</div><div class="etfc-stat-val" style="color:' + ((e.thirtyDayFlow || 0) >= 0 ? 'var(--live)' : 'var(--red)') + '">' + ((e.thirtyDayFlow || 0) >= 0 ? '+' : '') + fmt(e.thirtyDayFlow || 0) + '</div></div>';
+      cardsHtml += '</div>';
+      cardsHtml += '<div style="font-family:\'DM Mono\',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;display:flex;justify-content:space-between"><span>Flow Intensity</span><span style="color:' + bc + '">' + (pos ? 'Inflow' : 'Outflow') + '</span></div>';
+      cardsHtml += '<div class="bar-track"><div class="bar-fill2" style="width:0%;background:' + bc + '" data-w="' + bp + '"></div></div>';
+      cardsHtml += '</div>';
+    }
+    el('etf-cards').innerHTML = cardsHtml;
+    setTimeout(function() {
+      var fills = document.querySelectorAll('.bar-fill2');
+      for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute('data-w') + '%';
+    }, 100);
+
+    var histVals = [];
+    for (var i = 0; i < 30; i++) histVals.push(Math.floor((Math.random() - 0.35) * 800000000));
+    var histCanvas = el('etfHistChart');
+    if (histCanvas) {
+      histCanvas.width = histCanvas.offsetWidth || 800;
+      histCanvas.height = 100;
+      var ctx = histCanvas.getContext('2d');
+      var w = histCanvas.width, h = histCanvas.height;
+      var mn = Math.min.apply(null, histVals), mx = Math.max.apply(null, histVals), rng = mx - mn || 1;
+      var zero = h - (h * (0 - mn) / rng);
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(10,10,15,.1)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, zero); ctx.lineTo(w, zero); ctx.stroke();
+      var bw = w / histVals.length - 1;
+      for (var i = 0; i < histVals.length; i++) {
+        var v = histVals[i];
+        var x = i * (bw + 1);
+        var bh = Math.abs(h * v / rng);
+        var y = v >= 0 ? zero - bh : zero;
+        ctx.fillStyle = v >= 0 ? 'rgba(46,204,113,.7)' : 'rgba(231,76,60,.7)';
+        ctx.fillRect(x, y, bw, bh);
+      }
+    }
+
+    var prompt = 'You are Quasar Chronicle ETF analyst. Write 3 paragraphs of institutional analysis. BTC ETF AUM: ' + fmt(btc.totalAum || 0) + ', Daily Flow: ' + fmt(btc.dailyFlow || 0) + ', 7-Day: ' + fmt(btc.sevenDayFlow || 0) + '. ETH ETF AUM: ' + fmt(eth.totalAum || 0) + ', Daily Flow: ' + fmt(eth.dailyFlow || 0) + '. Cover: (1) institutional sentiment, (2) BTC vs ETH divergence, (3) what to watch next. End with "— Quasar ETF Desk". Bloomberg authority.';
+    callAI(prompt, 800).then(function(txt) {
+      var lines = txt.trim().split('\n').filter(function(l) { return l.trim(); });
+      setEl('etf-ai-title', 'Institutional Flow Analysis — ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }));
+      var sig = ''; var body = '';
+      for (var i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('—')) sig = lines[i];
+        else body += '<p>' + lines[i] + '</p>';
+      }
+      el('etf-ai-body').innerHTML = body || '<p>ETF analysis complete.</p>';
+      setEl('etf-ai-sig', sig);
+    });
   });
 }
 
+// ══════════════════════════════════════════════════════
+// INDEX PAGE
+// ══════════════════════════════════════════════════════
+var _idxLoaded = false;
+var IDX_DEMO = [
+  { id: 'ssimag7', name: 'MAG7.ssi', price: '156.42', changeP: '1.52', desc: 'Top 7 crypto assets by market cap', coins: ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'AVAX'] },
+  { id: 'ssilayer1', name: 'Layer1.ssi', price: '89.17', changeP: '-0.92', desc: 'Leading Layer 1 blockchain protocols', coins: ['ETH', 'SOL', 'ADA', 'AVAX', 'NEAR'] },
+  { id: 'ssidefi', name: 'DeFi.ssi', price: '42.88', changeP: '2.68', desc: 'Decentralized finance blue chips', coins: ['UNI', 'AAVE', 'MKR', 'CRV', 'SNX'] },
+  { id: 'ssimeme', name: 'Meme.ssi', price: '18.34', changeP: '21.20', desc: 'Top meme coins by volume', coins: ['DOGE', 'SHIB', 'PEPE', 'FLOKI', 'BONK'] }
+];
 
-async function loadIndexPage() {
-  window._idx = true;
-  const box = document.getElementById('index-grid');
-  if (!box) return;
+function loadIndex() {
+  if (_idxLoaded) return;
+  _idxLoaded = true;
+  var html = '';
+  for (var i = 0; i < IDX_DEMO.length; i++) {
+    var idx = IDX_DEMO[i];
+    var up = parseFloat(idx.changeP || 0) >= 0;
+    var bc = up ? 'var(--live)' : 'var(--red)';
+    html += '<div class="idx-card" style="border-top:3px solid ' + bc + '">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:start">';
+    html += '<div><div class="idx-name">' + idx.name + '</div><div class="idx-desc">' + idx.desc + '</div></div>';
+    html += '<div style="text-align:right"><div style="font-family:\'DM Mono\',monospace;font-size:1.1rem;font-weight:500">$' + idx.price + '</div>';
+    html += '<div style="font-family:\'DM Mono\',monospace;font-size:.65rem;color:' + bc + '">' + (up ? '▲' : '▼') + ' ' + Math.abs(parseFloat(idx.changeP)) + '%</div></div>';
+    html += '</div>';
+    html += '<div class="idx-coins">';
+    for (var j = 0; j < idx.coins.length; j++) html += '<span class="idx-coin">' + idx.coins[j] + '</span>';
+    html += '</div>';
+    html += '<div style="margin-top:.8rem;border-top:1px solid var(--rule);padding-top:.6rem"><a href="https://sosovalue.com/indices/' + idx.id + '" target="_blank" style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gdim);text-decoration:underline">View on SoSoValue ↗</a></div>';
+    html += '</div>';
+  }
+  el('idx-grid').innerHTML = html;
 
-  const IDX_DEMO = [
-    { id:'ssimag7', name:'MAG7.ssi', price:'156.42', change:'2.34', changeP:'1.52', desc:'Top 7 crypto assets by market cap', coins:['BTC','ETH','BNB','SOL','XRP','ADA','AVAX'] },
-    { id:'ssilayer1', name:'Layer1.ssi', price:'89.17', change:'-0.83', changeP:'-0.92', desc:'Leading Layer 1 blockchain protocols', coins:['ETH','SOL','ADA','AVAX','NEAR'] },
-    { id:'ssidefi', name:'DeFi.ssi', price:'42.88', change:'1.12', changeP:'2.68', desc:'Decentralized finance blue chips', coins:['UNI','AAVE','MKR','CRV','SNX'] },
-    { id:'ssimeme', name:'Meme.ssi', price:'18.34', change:'3.21', changeP:'21.20', desc:'Top meme coins by volume', coins:['DOGE','SHIB','PEPE','FLOKI','BONK'] },
+  var prompt = 'You are Quasar Chronicle index analyst. Write 2 paragraphs on current crypto index performance. MAG7.ssi at $156.42 (+1.52%), DeFi.ssi at $42.88 (+2.68%), Meme.ssi at $18.34 (+21.20%). Cover (1) what index performance signals about market breadth, (2) key themes driving performance. End with "— Quasar Index Desk". Bloomberg style.';
+  callAI(prompt, 600).then(function(txt) {
+    setEl('idx-ai-title', 'Index Performance Commentary — ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }));
+    el('idx-ai-body').innerHTML = txt.split('\n').filter(function(l) { return l.trim() && !l.startsWith('—'); }).map(function(l) { return '<p>' + l + '</p>'; }).join('') || '<p>Index analysis complete.</p>';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// MACRO PAGE
+// ══════════════════════════════════════════════════════
+var _macLoaded = false;
+var MACRO_DEMO = [
+  { date: '2026-06-11', event: 'US CPI (YoY)', importance: 'HIGH', forecast: '3.1%', previous: '3.4%', currency: 'USD' },
+  { date: '2026-06-12', event: 'ECB Interest Rate Decision', importance: 'HIGH', forecast: '4.00%', previous: '4.00%', currency: 'EUR' },
+  { date: '2026-06-18', event: 'FOMC Meeting / Fed Rate Decision', importance: 'HIGH', forecast: '5.25%', previous: '5.25%', currency: 'USD' },
+  { date: '2026-06-20', event: 'US Initial Jobless Claims', importance: 'MEDIUM', forecast: '220K', previous: '215K', currency: 'USD' },
+  { date: '2026-06-25', event: 'US GDP Growth Rate (QoQ)', importance: 'HIGH', forecast: '2.8%', previous: '2.5%', currency: 'USD' },
+  { date: '2026-06-27', event: 'US PCE Price Index (YoY)', importance: 'HIGH', forecast: '2.6%', previous: '2.7%', currency: 'USD' },
+  { date: '2026-07-02', event: 'US Non-Farm Payrolls', importance: 'HIGH', forecast: '185K', previous: '175K', currency: 'USD' },
+  { date: '2026-07-09', event: 'Fed Chair Powell Speech', importance: 'HIGH', forecast: '—', previous: '—', currency: 'USD' }
+];
+
+function loadMacro() {
+  if (_macLoaded) return;
+  _macLoaded = true;
+  var events = MACRO_DEMO;
+  var html = '<div class="macro-table"><div class="macro-thead"><span class="macro-th">Date</span><span class="macro-th">Event</span><span class="macro-th">Importance</span><span class="macro-th">Forecast</span><span class="macro-th">Previous</span></div>';
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    var impCls = e.importance === 'HIGH' ? 'imp-high' : e.importance === 'MEDIUM' ? 'imp-med' : 'imp-low';
+    var bg = i % 2 === 0 ? 'background:var(--cream)' : '';
+    html += '<div class="macro-row" style="' + bg + '">';
+    html += '<span class="macro-td">' + e.date + '</span>';
+    html += '<span class="macro-td macro-event">' + e.event + '</span>';
+    html += '<span class="macro-td ' + impCls + '">' + e.importance + '</span>';
+    html += '<span class="macro-td">' + (e.forecast || '—') + '</span>';
+    html += '<span class="macro-td" style="color:var(--muted)">' + (e.previous || '—') + '</span>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--muted);margin-bottom:1rem">Macro data via <a href="https://sosovalue.com/macro" target="_blank" style="color:var(--gdim)">SoSoValue Macro ↗</a></div>';
+  el('macro-cal').innerHTML = html;
+
+  var prompt = 'You are Quasar Chronicle macro analyst. Write 3 paragraphs on the upcoming macro calendar for crypto investors. Key events: FOMC meeting June 18 (expected hold at 5.25%), US CPI June 11 (forecast 3.1%), PCE June 27 (forecast 2.6%). Cover (1) what these events mean for crypto, (2) key risk scenarios, (3) positioning advice. End with "— Quasar Macro Desk". Bloomberg authority.';
+  callAI(prompt, 700).then(function(txt) {
+    setEl('mac-ai-title', 'Macro Intelligence — ' + new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
+    el('mac-ai-body').innerHTML = txt.split('\n').filter(function(l) { return l.trim() && !l.startsWith('—'); }).map(function(l) { return '<p>' + l + '</p>'; }).join('') || '<p>Macro analysis complete.</p>';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// RESEARCH PAGE
+// ══════════════════════════════════════════════════════
+var _resLoaded = false;
+function loadResearch() {
+  if (_resLoaded) return;
+  _resLoaded = true;
+  fetchNews(null).then(function(items) {
+    var research = items.filter(function(i) { return [2, 6, 4].indexOf(i.category) > -1; });
+    var all = research.length >= 4 ? research : items;
+    all = all.slice(0, 8);
+    var html = '';
+    for (var i = 0; i < all.length; i++) {
+      var item = all[i];
+      var c = getContent(item);
+      var big = i === 0;
+      var ts = item.release_time || item.releaseTime || Date.now();
+      html += '<div class="res-card" onclick="window.open(\'https://sosovalue.com/research\',\'_blank\')" style="' + (big ? 'grid-column:1/-1' : '') + '">';
+      if (item.coverImg) html += '<img class="res-img" src="' + item.coverImg + '" style="height:' + (big ? '220px' : '140px') + '" onerror="this.style.display=\'none\'">';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gdim);margin-bottom:.3rem">Research · ' + ago(ts) + '</div>';
+      html += '<div class="res-hed">' + c.title + '</div>';
+      html += '<div style="font-size:.78rem;line-height:1.6;color:#3a3a45;margin-top:.4rem">' + strip(c.content || '').substring(0, big ? 200 : 100) + '...</div>';
+      html += '<div style="margin-top:.5rem;font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--gdim)">📡 Source: SoSoValue Research ↗</div>';
+      html += '</div>';
+    }
+    el('res-grid').innerHTML = html;
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SODEX TERMINAL
+// ══════════════════════════════════════════════════════
+var _sdxLoaded = false;
+function loadSodex() {
+  if (_sdxLoaded) { refreshSdx(); return; }
+  _sdxLoaded = true;
+  refreshSdx();
+  _sdxTimer = setInterval(refreshSdx, 8000);
+}
+
+function refreshSdx() {
+  var symApi = _sym.replace('_', '/');
+  Promise.all([
+    fetchSdx('/markets/tickers?symbol=' + symApi),
+    fetchSdx('/markets/' + symApi + '/orderbook?limit=8'),
+    fetchSdx('/markets/' + symApi + '/trades?limit=8')
+  ]).then(function(results) {
+    var ticker = results[0], ob = results[1], trades = results[2];
+    var demo = DEMO_SDX[_sym];
+    if (!ticker || (Array.isArray(ticker) && !ticker.length)) {
+      renderSdxTicker(demo);
+    } else {
+      var t = Array.isArray(ticker) ? ticker[0] : ticker;
+      renderSdxTicker(t);
+    }
+    if (!ob || (!ob.bids && !ob.asks)) {
+      renderOrderbook(getDemoOb());
+    } else {
+      renderOrderbook(ob);
+    }
+    if (!trades || !trades.length) {
+      renderTrades(getDemoTrades());
+    } else {
+      renderTrades(trades);
+    }
+  });
+}
+
+function getDemoOb() {
+  var obMap = {
+    'vBTC_vUSDC': { bids: [['96410','0.48'],['96400','1.23'],['96390','0.89'],['96380','2.11'],['96370','0.65'],['96360','1.88'],['96350','0.99'],['96340','3.22']], asks: [['96430','0.32'],['96440','0.99'],['96450','1.46'],['96460','0.72'],['96470','2.35'],['96480','0.57'],['96490','1.12'],['96500','2.89']] },
+    'vETH_vUSDC': { bids: [['3820','2.12'],['3818','5.43'],['3816','3.21'],['3814','8.90'],['3812','4.56'],['3810','12.3'],['3808','7.89'],['3806','15.2']], asks: [['3822','1.89'],['3824','4.23'],['3826','6.78'],['3828','3.45'],['3830','9.12'],['3832','5.67'],['3834','2.34'],['3836','11.8']] },
+    'SOSO_vUSDC': { bids: [['0.2835','12400'],['0.2830','28900'],['0.2825','15600'],['0.2820','42100'],['0.2815','8900'],['0.2810','31200'],['0.2805','19800'],['0.2800','55400']], asks: [['0.2845','9800'],['0.2850','22300'],['0.2855','16700'],['0.2860','38900'],['0.2865','11200'],['0.2870','28400'],['0.2875','14600'],['0.2880','47800']] }
+  };
+  return obMap[_sym] || obMap['vBTC_vUSDC'];
+}
+
+function getDemoTrades() {
+  var p = parseFloat(DEMO_SDX[_sym].lastPrice);
+  return [
+    { price: p.toFixed(2), qty: '0.1234', time: Date.now() - 5000, isBuyerMaker: false },
+    { price: (p * 0.9999).toFixed(2), qty: '0.2891', time: Date.now() - 12000, isBuyerMaker: true },
+    { price: (p * 1.0001).toFixed(2), qty: '0.0542', time: Date.now() - 18000, isBuyerMaker: false },
+    { price: (p * 0.9998).toFixed(2), qty: '0.3210', time: Date.now() - 25000, isBuyerMaker: true },
+    { price: (p * 1.0002).toFixed(2), qty: '0.1876', time: Date.now() - 34000, isBuyerMaker: false }
   ];
-
-  let indices = IDX_DEMO;
-  try {
-    const r = await fetch(`${SOSO_OLD}/index/list`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'});
-    if (r.ok) { const d = await r.json(); if(Array.isArray(d) && d.length) indices = d; }
-  } catch {}
-
-  const newsR = await fetch(`${SOSO_OLD}/news/featured?pageNum=1&pageSize=6&categoryList=4`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'}).catch(()=>null);
-  const newsD = newsR ? await newsR.json().catch(()=>null) : null;
-  const newsItems = newsD?.code===0 ? newsD.data?.list||[] : [];
-
-  box.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
-      ${IDX_DEMO.map(idx => {
-        const up = parseFloat(idx.changeP||0) >= 0;
-        return `<div style="background:var(--cream);border:1px solid var(--rule);border-top:3px solid ${up?'var(--live)':'var(--red, #e74c3c)'};padding:1.5rem;">
-          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.8rem;">
-            <div>
-              <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;">${idx.name}</div>
-              <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;">${idx.desc||'SoSoValue Index'}</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;">$${parseFloat(idx.price||0).toFixed(2)}</div>
-              <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:${up?'var(--live)':'var(--red,#e74c3c)'};">${up?'▲':'▼'} ${Math.abs(parseFloat(idx.changeP||0)).toFixed(2)}%</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.8rem;">
-            ${(idx.coins||[]).map(c=>`<span style="font-family:'DM Mono',monospace;font-size:0.52rem;background:var(--ink);color:var(--gold);padding:0.15rem 0.4rem;">${c}</span>`).join('')}
-          </div>
-          <div style="margin-top:1rem;border-top:1px solid var(--rule);padding-top:0.8rem;">
-            <a href="https://sosovalue.com/indices/${idx.id||''}" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);text-decoration:underline;">View on SoSoValue ↗</a>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-    ${newsItems.length ? `
-    <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.5rem;margin-bottom:1.2rem;">Index Intelligence</div>
-    ${newsItems.map(item=>{
-      const c=item.multilanguageContent?.find(l=>l.language==='en')||item.multilanguageContent?.[0]||{};
-      return `<div style="padding:0.9rem 0;border-bottom:1px solid var(--rule);">
-        <div style="font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--muted);margin-bottom:0.3rem;">Insights · ${ago(item.releaseTime)}</div>
-        <div style="font-size:0.88rem;font-weight:500;line-height:1.4;">${c.title||''}</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem;">${strip(c.content||'').substring(0,120)}...</div>
-      </div>`;
-    }).join('')}` : ''}
-    <div style="margin-top:1.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;text-align:center;color:var(--muted);">Index data sourced from <a href="https://sosovalue.com/indices" target="_blank" style="color:var(--gold-dim);">SoSoValue Indices ↗</a></div>
-  `;
 }
 
-
-async function loadMacroPage() {
-  window._mac = true;
-  const box = document.getElementById('macro-cal-body');
-  if (!box) return;
-
-  // Demo macro events (shown when API unavailable)
-  const MACRO_DEMO = [
-    { date:'2026-06-04', event:'FOMC Meeting Minutes', importance:'HIGH', actual:'—', forecast:'—', previous:'5.25-5.50%', currency:'USD', category:'Central Bank' },
-    { date:'2026-06-06', event:'US Non-Farm Payrolls', importance:'HIGH', actual:'—', forecast:'185K', previous:'175K', currency:'USD', category:'Employment' },
-    { date:'2026-06-11', event:'US CPI (YoY)', importance:'HIGH', actual:'—', forecast:'3.1%', previous:'3.4%', currency:'USD', category:'Inflation' },
-    { date:'2026-06-12', event:'ECB Interest Rate Decision', importance:'HIGH', actual:'—', forecast:'4.00%', previous:'4.00%', currency:'EUR', category:'Central Bank' },
-    { date:'2026-06-14', event:'US Producer Price Index', importance:'MEDIUM', actual:'—', forecast:'0.3%', previous:'0.2%', currency:'USD', category:'Inflation' },
-    { date:'2026-06-18', event:'Fed Chair Speech', importance:'HIGH', actual:'—', forecast:'—', previous:'—', currency:'USD', category:'Central Bank' },
-    { date:'2026-06-25', event:'US GDP (QoQ)', importance:'HIGH', actual:'—', forecast:'2.8%', previous:'2.5%', currency:'USD', category:'Growth' },
-    { date:'2026-06-28', event:'PCE Price Index (YoY)', importance:'HIGH', actual:'—', forecast:'2.6%', previous:'2.7%', currency:'USD', category:'Inflation' },
-  ];
-
-  let events = MACRO_DEMO;
-  try {
-    const r = await fetch(`${SOSO_OLD}/macro/calendar`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'});
-    if (r.ok) { const d = await r.json(); if(Array.isArray(d)&&d.length) events = d; }
-  } catch {}
-
-  const impColor = i => i==='HIGH'?'var(--red,#e74c3c)':i==='MEDIUM'?'var(--gold)':'var(--muted)';
-
-  box.innerHTML = `
-    <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--ink);padding-top:0.5rem;margin-bottom:1.2rem;">Upcoming Macro Events</div>
-    <div style="border:1px solid var(--rule);overflow:hidden;margin-bottom:2rem;">
-      <div style="display:grid;grid-template-columns:100px 1fr 80px 80px 80px 80px;background:var(--ink);gap:0;">
-        ${['Date','Event','Importance','Forecast','Previous','Currency'].map(h=>`<div style="padding:0.6rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">${h}</div>`).join('')}
-      </div>
-      ${events.map((e,i)=>`
-        <div style="display:grid;grid-template-columns:100px 1fr 80px 80px 80px 80px;background:${i%2===0?'var(--cream)':'var(--paper)'};border-bottom:1px solid var(--rule);">
-          <div style="padding:0.7rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.6rem;">${e.date||''}</div>
-          <div style="padding:0.7rem 0.8rem;font-size:0.78rem;font-weight:500;">${e.event||e.name||''}</div>
-          <div style="padding:0.7rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:${impColor(e.importance||e.impact||'')};">${e.importance||e.impact||'—'}</div>
-          <div style="padding:0.7rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.6rem;">${e.forecast||'—'}</div>
-          <div style="padding:0.7rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);">${e.previous||'—'}</div>
-          <div style="padding:0.7rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.6rem;">${e.currency||e.country||'USD'}</div>
-        </div>`).join('')}
-    </div>
-    <div style="font-family:'DM Mono',monospace;font-size:0.52rem;text-align:center;color:var(--muted);">Macro data via <a href="https://sosovalue.com/macro" target="_blank" style="color:var(--gold-dim);">SoSoValue Macro ↗</a></div>
-  `;
-
-  // AI macro analysis
-  const aiBox = document.getElementById('index-ai-body');
-  const aiTitle = document.getElementById('index-ai-title');
-  if (aiBox) {
-    const prompt = `You are Quasar Chronicle's macro analyst. Write a sharp 3-paragraph analysis of the upcoming macro calendar for crypto investors. Key events: ${events.slice(0,4).map(e=>e.event||e.name).join(', ')}. Focus on: (1) what these events mean for crypto markets, (2) key risk levels to watch, (3) positioning advice. Bloomberg authority. End with "— Quasar Macro Desk"`;
-    const txt = await ai(prompt, 700);
-    if (aiTitle) aiTitle.textContent = `Macro Intelligence — ${new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}`;
-    if (aiBox) aiBox.innerHTML = txt.split('\n').filter(l=>l.trim()).map(l=>`<p style="margin-bottom:0.8rem;">${l}</p>`).join('');
-  }
-}
-
-
-async function loadResearch() {
-  window._res = true;
-  const box = document.getElementById('research-grid');
-  if (!box) return;
-  box.innerHTML = '<div style="padding:3rem;text-align:center;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);">Loading research...</div>';
-
-  try {
-    const r = await fetch(`${SOSO_OLD}/news/featured?pageNum=1&pageSize=12&categoryList=2,6`, {headers:{'x-soso-api-key':SOSO_KEY}, mode:'cors'});
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
-    const items = d?.code===0 ? (d.data?.list||[]) : (Array.isArray(d?.data)?d.data:[]);
-
-    if (!items.length) throw new Error('no items');
-
-    box.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
-        ${items.map((item,i) => {
-          const c = item.multilanguageContent?.find(l=>l.language==='en')||item.multilanguageContent?.[0]||{};
-          const big = i === 0;
-          return `<div style="${big?'grid-column:1/-1;':''}border-top:2px solid var(--ink);padding-top:1rem;cursor:pointer;" onclick="window.open('https://sosovalue.com/research','_blank')">
-            ${item.coverImg ? `<img src="${item.coverImg}" style="width:100%;height:${big?'240px':'140px'};object-fit:cover;margin-bottom:0.8rem;" onerror="this.style.display='none'">` : ''}
-            <div style="font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.4rem;">Research · ${ago(item.releaseTime)}</div>
-            <div style="font-family:'Playfair Display',serif;font-size:${big?'1.4rem':'1rem'};font-weight:700;line-height:1.3;margin-bottom:0.6rem;">${c.title||''}</div>
-            <div style="font-size:0.78rem;line-height:1.6;color:#3a3a45;">${strip(c.content||'').substring(0,big?200:100)}...</div>
-            <div style="margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--gold-dim);">📡 Source: SoSoValue Research ↗</div>
-          </div>`;
-        }).join('')}
-      </div>
-    `;
-  } catch {
-    box.innerHTML = `<div style="padding:2rem;text-align:center;">
-      <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:1rem;">Loading live research from SoSoValue...</p>
-      <a href="https://sosovalue.com/research" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:0.4rem 1rem;text-decoration:none;">View on SoSoValue ↗</a>
-    </div>`;
-  }
-}
-
-
-async function loadSodexPage() {
-  window._sdx = true;
-  await refreshSodex();
-  _sdxInterval = setInterval(refreshSodex, 5000);
-}
-
-async function refreshSodex() {
-  const [ticker, ob, trades] = await Promise.all([
-    fetchSdx(`/markets/tickers?symbol=${_sym}`),
-    fetchSdx(`/markets/${_sym}/orderbook?limit=8`),
-    fetchSdx(`/markets/${_sym}/trades?limit=10`)
-  ]);
-  renderSodexTicker(ticker);
-  renderOrderbook(ob);
-  renderTrades(trades);
-}
-
-// SoDEX demo data for when testnet is unreachable
-const SODEX_DEMO = {
-  tickers: [
-    { symbol:'vBTC/vUSDC', lastPrice:'96420.50', priceChange:'1842.30', priceChangePercent:'1.95', highPrice:'97200.00', lowPrice:'94580.00', volume:'124.8532', quoteVolume:'12045230.50' },
-    { symbol:'vETH/vUSDC', lastPrice:'3821.75', priceChange:'-34.20', priceChangePercent:'-0.89', highPrice:'3900.00', lowPrice:'3780.00', volume:'892.4411', quoteVolume:'3412890.20' },
-    { symbol:'SOSO/vUSDC', lastPrice:'0.2840', priceChange:'0.0124', priceChangePercent:'4.57', highPrice:'0.2920', lowPrice:'0.2680', volume:'284500', quoteVolume:'80796.00' },
-  ],
-  // Per-symbol orderbooks
-  orderbooks: {
-    'vBTC_vUSDC': {
-      bids:[['96410.00','0.4821'],['96400.00','1.2340'],['96390.00','0.8920'],['96380.00','2.1100'],['96370.00','0.6540'],['96360.00','1.8820'],['96350.00','0.9910'],['96340.00','3.2200']],
-      asks:[['96430.00','0.3210'],['96440.00','0.9870'],['96450.00','1.4560'],['96460.00','0.7230'],['96470.00','2.3450'],['96480.00','0.5670'],['96490.00','1.1230'],['96500.00','2.8900']],
-    },
-    'vETH_vUSDC': {
-      bids:[['3820.00','2.1200'],['3818.00','5.4300'],['3816.00','3.2100'],['3814.00','8.9000'],['3812.00','4.5600'],['3810.00','12.300'],['3808.00','7.8900'],['3806.00','15.200']],
-      asks:[['3822.00','1.8900'],['3824.00','4.2300'],['3826.00','6.7800'],['3828.00','3.4500'],['3830.00','9.1200'],['3832.00','5.6700'],['3834.00','2.3400'],['3836.00','11.800']],
-    },
-    'SOSO_vUSDC': {
-      bids:[['0.2835','12400'],['0.2830','28900'],['0.2825','15600'],['0.2820','42100'],['0.2815','8900'],['0.2810','31200'],['0.2805','19800'],['0.2800','55400']],
-      asks:[['0.2845','9800'],['0.2850','22300'],['0.2855','16700'],['0.2860','38900'],['0.2865','11200'],['0.2870','28400'],['0.2875','14600'],['0.2880','47800']],
-    },
-  },
-  get orderbook() { return this.orderbooks[_sym] || this.orderbooks['vBTC_vUSDC']; },
-  trades: [
-    {price:'96420.50',qty:'0.1234',time:Date.now()-5000,isBuyerMaker:false},
-    {price:'96415.00',qty:'0.2891',time:Date.now()-12000,isBuyerMaker:true},
-    {price:'96422.00',qty:'0.0542',time:Date.now()-18000,isBuyerMaker:false},
-    {price:'96418.75',qty:'0.3210',time:Date.now()-25000,isBuyerMaker:true},
-    {price:'96425.00',qty:'0.1876',time:Date.now()-34000,isBuyerMaker:false},
-  ]
-};
-
-async function fetchSdx(path) {
-  try {
-    const r = await fetch(SODEX + path, { headers:{'Accept':'application/json'} });
-    if (!r.ok) throw new Error('SoDEX unreachable');
-    const d = await r.json();
-    if (d && (d.data || Array.isArray(d))) return d.data || d;
-    throw new Error('No data');
-  } catch {
-    // SoDEX testnet unreachable — use demo data keyed to current pair
-    const symIdx = ['vBTC_vUSDC','vETH_vUSDC','SOSO_vUSDC'].indexOf(_sym);
-    if (path.includes('tickers')) return [SODEX_DEMO.tickers[Math.max(0,symIdx)]];
-    if (path.includes('orderbook')) return SODEX_DEMO.orderbook;
-    if (path.includes('trades')) return SODEX_DEMO.trades;
-    return null;
-  }
-}
-
-function renderSodexTicker(data) {
-  if (!data) return;
-  const t = Array.isArray(data) ? data[0] : data;
+function renderSdxTicker(t) {
   if (!t) return;
-  const price = parseFloat(t.lastPrice||t.close_price||0);
-  const chgPct = parseFloat(t.priceChangePercent||t.change_pct||0);
-  document.getElementById('sdx-price').textContent = fmtP(price);
-  const chgEl = document.getElementById('sdx-chg');
-  chgEl.textContent = `${chgPct>=0?'▲':'▼'} ${Math.abs(chgPct).toFixed(2)}% 24h`;
-  chgEl.style.color = chgPct>=0?'var(--live)':'var(--red)';
-  document.getElementById('sdx-high').textContent = fmtP(t.highPrice||t.high_24h||0);
-  document.getElementById('sdx-low').textContent = fmtP(t.lowPrice||t.low_24h||0);
-  document.getElementById('sdx-vol').textContent = fmt(parseFloat(t.volume||t.base_volume||0));
-  document.getElementById('sdx-ask').textContent = fmtP(t.askPrice||t.best_ask||0);
-  updateTradeTotal(price);
+  var price = parseFloat(t.lastPrice || t.close_price || 0);
+  var chgPct = parseFloat(t.priceChangePercent || t.change_pct || 0);
+  setEl('sdx-price', fmtP(price));
+  var chgEl = el('sdx-chg');
+  if (chgEl) { chgEl.textContent = (chgPct >= 0 ? '▲' : '▼') + ' ' + Math.abs(chgPct).toFixed(2) + '% 24h'; chgEl.style.color = chgPct >= 0 ? 'var(--live)' : 'var(--red)'; }
+  setEl('sdx-high', fmtP(parseFloat(t.highPrice || t.high_price || 0)));
+  setEl('sdx-low', fmtP(parseFloat(t.lowPrice || t.low_price || 0)));
+  setEl('sdx-vol', parseFloat(t.volume || 0).toFixed(2));
+  var orderPrice = el('order-price');
+  if (orderPrice && !orderPrice.value) orderPrice.value = price.toFixed(2);
 }
 
-function renderOrderbook(data) {
-  if (!data) return;
-  const asks = (data.asks||[]).slice(0,8).reverse();
-  const bids = (data.bids||[]).slice(0,8);
-  const maxAsk = Math.max(...asks.map(a=>parseFloat(a[1]||a.quantity||0)),1);
-  const maxBid = Math.max(...bids.map(b=>parseFloat(b[1]||b.quantity||0)),1);
-  document.getElementById('ob-asks').innerHTML = asks.map(a => {
-    const p=parseFloat(a[0]||a.price||0), q=parseFloat(a[1]||a.quantity||0);
-    const w=(q/maxAsk*100).toFixed(0);
-    return `<div class="ob-row"><div class="ob-row-fill ob-ask-fill" style="width:${w}%"></div><span class="ob-ask">${fmtP(p)}</span><span style="color:rgba(245,240,232,0.4);font-family:'DM Mono',monospace;font-size:0.58rem">${q.toFixed(4)}</span></div>`;
-  }).join('');
-  document.getElementById('ob-bids').innerHTML = bids.map(b => {
-    const p=parseFloat(b[0]||b.price||0), q=parseFloat(b[1]||b.quantity||0);
-    const w=(q/maxBid*100).toFixed(0);
-    return `<div class="ob-row"><div class="ob-row-fill ob-bid-fill" style="width:${w}%"></div><span class="ob-bid">${fmtP(p)}</span><span style="color:rgba(245,240,232,0.4);font-family:'DM Mono',monospace;font-size:0.58rem">${q.toFixed(4)}</span></div>`;
-  }).join('');
+function renderOrderbook(ob) {
+  if (!ob) return;
+  var bids = ob.bids || [];
+  var asks = ob.asks || [];
+  var askHtml = '';
+  for (var i = asks.length - 1; i >= Math.max(0, asks.length - 8); i--) {
+    var a = asks[i];
+    var p = parseFloat(a[0] || a.price || 0);
+    var q = parseFloat(a[1] || a.quantity || 0);
+    askHtml += '<div class="ob-row ob-ask"><span class="ob-price">' + p.toFixed(4) + '</span><span class="ob-qty">' + q.toFixed(4) + '</span><span class="ob-total">' + (p * q).toFixed(2) + '</span></div>';
+  }
+  var bidHtml = '';
+  for (var i = 0; i < Math.min(8, bids.length); i++) {
+    var b = bids[i];
+    var p = parseFloat(b[0] || b.price || 0);
+    var q = parseFloat(b[1] || b.quantity || 0);
+    bidHtml += '<div class="ob-row ob-bid"><span class="ob-price">' + p.toFixed(4) + '</span><span class="ob-qty">' + q.toFixed(4) + '</span><span class="ob-total">' + (p * q).toFixed(2) + '</span></div>';
+  }
+  el('ob-asks').innerHTML = askHtml;
+  el('ob-bids').innerHTML = bidHtml;
+  if (asks.length && bids.length) {
+    var bestAsk = parseFloat(asks[0][0] || asks[0].price || 0);
+    var bestBid = parseFloat(bids[0][0] || bids[0].price || 0);
+    var spread = (bestAsk - bestBid).toFixed(4);
+    setEl('ob-spread', 'Spread: ' + spread + ' (' + ((bestAsk - bestBid) / bestAsk * 100).toFixed(3) + '%)');
+  }
 }
 
-function renderTrades(data) {
-  if (!Array.isArray(data)) return;
-  document.getElementById('recent-trades').innerHTML = data.slice(0,10).map(t => {
-    const price = parseFloat(t.price||0);
-    const qty = parseFloat(t.quantity||t.qty||0);
-    const isBuy = (t.isBuyerMaker===false)||(t.side==='buy');
-    const col = isBuy?'var(--live)':'var(--red)';
-    const ts = t.time||t.timestamp ? new Date(t.time||t.timestamp).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '—';
-    return `<div class="rt-row"><span style="color:${col}">${fmtP(price)}</span><span style="text-align:center;color:rgba(245,240,232,0.5)">${qty.toFixed(4)}</span><span style="text-align:right;color:rgba(245,240,232,0.3)">${ts}</span></div>`;
-  }).join('');
+function renderTrades(trades) {
+  if (!trades || !trades.length) return;
+  var html = '';
+  for (var i = 0; i < Math.min(8, trades.length); i++) {
+    var t = trades[i];
+    var p = parseFloat(t.price || 0);
+    var q = parseFloat(t.qty || t.quantity || 0);
+    var buy = !t.isBuyerMaker;
+    var ts = new Date(t.time || Date.now()).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:.3rem .8rem;border-bottom:1px solid rgba(10,10,15,.05)">';
+    html += '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:' + (buy ? 'var(--live)' : 'var(--red)') + '">' + p.toFixed(4) + '</span>';
+    html += '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;text-align:center;color:rgba(245,240,232,.5)">' + q.toFixed(4) + '</span>';
+    html += '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;text-align:right;color:rgba(245,240,232,.3)">' + ts + '</span>';
+    html += '</div>';
+  }
+  el('sdx-trades').innerHTML = html;
 }
 
 function switchSym(sym) {
   _sym = sym;
-  document.querySelectorAll('.sym-tab').forEach((t,i) => t.classList.toggle('active', ['vBTC_vUSDC','vETH_vUSDC','SOSO_vUSDC'][i]===sym));
-  refreshSodex();
-  loadSodexNews(sym.split('_')[0].replace('v',''));
+  var tabs = document.querySelectorAll('.sym-tab');
+  var syms = ['vBTC_vUSDC', 'vETH_vUSDC', 'SOSO_vUSDC'];
+  for (var i = 0; i < tabs.length; i++) tabs[i].className = 'sym-tab' + (syms[i] === sym ? ' active' : '');
+  refreshSdx();
+  fetchNews(sym.split('_')[0].replace('v', '')).then(function(items) { renderSdxNews(items); });
 }
 
-async function loadSodexNews(coin) {
-  const coinMap = { BTC:'1673723677362319866', ETH:'1673723677362319867', SOSO:null };
-  const id = coinMap[coin];
-  const items = await fetchNews(id);
-  document.getElementById('sdx-news').innerHTML = items.slice(0,3).map(item =>
-    `<div class="sodex-news-item" style="padding:0.6rem 0;border-bottom:1px solid rgba(0,212,255,0.08);cursor:pointer;" onclick="window.open('${item.source_link||'https://sosovalue.com/research'}','_blank')">
-      <div style="font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--sodex);margin-bottom:0.2rem;">${CATS[item.category]||'News'} · ${ago(item.release_time)}</div>
-      <div style="font-size:0.78rem;color:rgba(245,240,232,0.8);line-height:1.4;">${item.title}</div>
-    </div>`
-  ).join('');
+function renderSdxNews(items) {
+  var box = el('sdx-news');
+  if (!box) return;
+  var html = '';
+  for (var i = 0; i < Math.min(3, items.length); i++) {
+    var c = getContent(items[i]);
+    html += '<div style="padding:.5rem 0;border-bottom:1px solid var(--rule);cursor:pointer" onclick="window.open(\'https://sosovalue.com/research\',\'_blank\')">';
+    html += '<div style="font-size:.75rem;font-weight:500;line-height:1.35">' + c.title + '</div>';
+    html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--gdim);margin-top:.2rem">SoSoValue ↗</div>';
+    html += '</div>';
+  }
+  box.innerHTML = html || '<div style="font-family:\'DM Mono\',monospace;font-size:.58rem;color:var(--muted)">Loading news...</div>';
 }
 
-function setTradeSide(side) {
-  _tradeSide = side;
-  document.getElementById('tt-buy').classList.toggle('active', side==='buy');
-  document.getElementById('tt-sell').classList.toggle('active', side==='sell');
-  const btn = document.getElementById('trade-btn');
-  if (side==='buy') { btn.className='trade-execute-btn buy-btn'; btn.textContent='Connect Wallet & Buy on SoDEX'; }
-  else { btn.className='trade-execute-btn sell-btn'; btn.textContent='Connect Wallet & Sell on SoDEX'; }
+function setTradeTab(side) {
+  _side = side;
+  el('ttab-buy').className = 'trade-tab buy' + (side === 'buy' ? ' active' : '');
+  el('ttab-sell').className = 'trade-tab sell' + (side === 'sell' ? ' active' : '');
+  el('trade-btn').className = 'trade-btn ' + side;
+  el('trade-btn').textContent = 'Connect Wallet & ' + (side === 'buy' ? 'Buy' : 'Sell') + ' on SoDEX';
 }
 
-function setOrderType(type) {
-  _orderType = type;
-  document.getElementById('ot-market').classList.toggle('active', type==='market');
-  document.getElementById('ot-limit').classList.toggle('active', type==='limit');
-  document.getElementById('limit-price-wrap').style.display = type==='limit'?'block':'none';
-}
+var orderTypeEl = el('order-type');
+if (orderTypeEl) orderTypeEl.addEventListener('change', function() {
+  var pw = el('price-wrap');
+  if (pw) pw.style.display = this.value === 'limit' ? 'block' : 'none';
+});
 
-function updateTradeTotal(price) {
-  const qty = parseFloat(document.getElementById('trade-qty')?.value||0);
-  const lp = parseFloat(document.getElementById('limit-price')?.value||price||0);
-  const total = qty * (_orderType==='limit'?lp:price);
-  const el = document.getElementById('trade-total');
-  if (el) el.textContent = total>0 ? fmtP(total)+' vUSDC' : '—';
-}
-
-document.getElementById('trade-qty')?.addEventListener('input', () => updateTradeTotal(parseFloat(document.getElementById('sdx-price').textContent.replace(/[^0-9.]/g,''))||0));
-
-function executeTrade() {
-  const qty = parseFloat(document.getElementById('trade-qty').value||0);
-  if (!qty || qty <= 0) { alert('Please enter a valid quantity.'); return; }
-  const sym = _sym.replace('_','-');
-  const side = _tradeSide;
-  const type = _orderType;
-  const url = `https://testnet.sodex.com/trade?symbol=${sym}&side=${side}&type=${type}&qty=${qty}`;
+function execTrade() {
+  var qty = parseFloat(el('order-qty').value || 0);
+  if (!qty) { alert('Please enter an amount'); return; }
+  var url = 'https://testnet.sodex.dev/trade?symbol=' + _sym.replace('_', '/') + '&side=' + _side + '&qty=' + qty;
   window.open(url, '_blank');
 }
 
-// ════════════════════════════════════════════════
-//  AI BRIEFING PAGE
-// ════════════════════════════════════════════════
-async function loadBriefingPage() {
-  window._brf = true;
-  document.getElementById('brief-date').textContent = today();
-  const [mkt, news, etfData] = await Promise.all([fetchMarket(), fetchNews(), fetchEtfSummary()]);
-  const m = renderMarketSignals(mkt);
-  const btcEtf = etfData?.btc;
-  const headlines = (Array.isArray(news)?news:[]).map(i=>i.title).slice(0,6).join('; ');
-  const btcChg = parseFloat(mkt.bitcoin?.usd_24h_change||0).toFixed(2);
-
-  document.getElementById('sig-btc').textContent = fmtP(mkt.bitcoin?.usd||0);
-  const bcel=document.getElementById('sig-btc-chg'); bcel.textContent=`${btcChg>=0?'▲':'▼'} ${Math.abs(btcChg)}% 24h`; bcel.style.color=btcChg>=0?'var(--live)':'var(--red)';
-  const sel=document.getElementById('sig-sent'); sel.textContent=m.word; sel.style.color=m.pct>52?'var(--live)':m.pct<48?'var(--red)':'var(--gold)';
-  const etfFlow=btcEtf?.total_net_inflow||0;
-  const eel=document.getElementById('sig-etf'); eel.textContent=(etfFlow>=0?'+':'')+fmt(etfFlow); eel.style.color=etfFlow>=0?'var(--live)':'var(--red)';
-  const esl=document.getElementById('sig-etf-sub'); esl.textContent=etfFlow>=0?'net inflow':'net outflow'; esl.style.color=etfFlow>=0?'var(--live)':'var(--red)';
-
-  document.getElementById('brief-headlines').innerHTML = (Array.isArray(news)?news:[]).slice(0,5).map(item =>
-    `<div style="padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;" onclick="window.open('${item.source_link||'https://sosovalue.com/research'}','_blank')">
-      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.2rem;">${CATS[item.category]||'News'} · ${ago(item.release_time)} · SoSoValue</div>
-      <div style="font-size:0.88rem;color:rgba(245,240,232,0.88);line-height:1.4;">${item.title}</div>
-    </div>`
-  ).join('');
-
-  const prompt = `You are Editor-in-Chief of Quasar Chronicle, an elite autonomous on-chain financial news agency powered by SoSoValue's 9-module API.  Write today's full intelligence briefing with EXACT structure:  TITLE: [compelling 10-12 word headline]  MARKET CONDITIONS: [2 paragraphs: BTC ${fmtP(mkt.bitcoin?.usd||0)} (${btcChg}% 24h), ETH ${fmtP(mkt.ethereum?.usd||0)}, Sentiment: ${m.word} ${m.pct.toFixed(0)}/100, BTC ETF Flow: ${fmt(etfFlow)}]  KEY DEVELOPMENTS: [2 paragraphs from: ${headlines}]  PULL QUOTE: [One powerful quotable sentence, max 20 words]  FORWARD OUTLOOK: [2 paragraphs: what to watch next 7 days]  Style: Bloomberg meets The Economist. Authoritative, specific, zero fluff.`;
-
-  const text = await ai(prompt, 1200);
-  parseBriefing(text);
-}
-
-function renderMarketSignals(d) {
-  const changes=[d.bitcoin,d.ethereum,d.solana,d.binancecoin].map(c=>parseFloat(c?.usd_24h_change||0));
-  const avg=changes.reduce((a,b)=>a+b,0)/changes.length;
-  const pct_=Math.min(100,Math.max(0,50+avg*5));
-  const word=pct_>60?'Bullish':pct_>52?'Cautiously Bullish':pct_>48?'Neutral':pct_>40?'Cautious':'Bearish';
-  return { avg, word, pct:pct_ };
+// ══════════════════════════════════════════════════════
+// AI BRIEFING PAGE
+// ══════════════════════════════════════════════════════
+var _brfLoaded = false;
+function loadBriefing() {
+  if (_brfLoaded) return;
+  _brfLoaded = true;
+  setEl('brief-date', today());
+  Promise.all([fetchMarket(), fetchNews(null), fetchEtf()]).then(function(results) {
+    var mkt = results[0], items = results[1], etf = results[2];
+    var btcEtf = etf[0] || {};
+    var coins = [{ id: 'bitcoin' }, { id: 'ethereum' }, { id: 'solana' }, { id: 'binancecoin' }];
+    var changes = coins.map(function(c) { return parseFloat((mkt[c.id] || {}).usd_24h_change || 0); });
+    var avg = changes.reduce(function(a, b) { return a + b; }, 0) / changes.length;
+    var pct = Math.min(100, Math.max(0, 50 + avg * 5));
+    var word = pct > 60 ? 'Bullish' : pct > 52 ? 'Cautiously Bullish' : pct > 48 ? 'Neutral' : pct > 40 ? 'Cautious' : 'Bearish';
+    var btcUsd = (mkt.bitcoin || {}).usd || 0;
+    var btcChg = parseFloat((mkt.bitcoin || {}).usd_24h_change || 0).toFixed(2);
+    var etfFlow = btcEtf.dailyFlow || 0;
+    setEl('sig-btc', fmtP(btcUsd));
+    setEl('sig-btc-chg', (btcChg >= 0 ? '▲' : '▼') + ' ' + Math.abs(btcChg) + '% 24h', btcChg >= 0 ? 'var(--live)' : 'var(--red)');
+    setEl('sig-sent', word, pct > 52 ? 'var(--live)' : pct < 48 ? 'var(--red)' : 'var(--gold)');
+    setEl('sig-etf', (etfFlow >= 0 ? '+' : '') + fmt(etfFlow), etfFlow >= 0 ? 'var(--live)' : 'var(--red)');
+    setEl('sig-etf-sub', etfFlow >= 0 ? 'net inflow' : 'net outflow', etfFlow >= 0 ? 'var(--live)' : 'var(--red)');
+    var headlines = items.slice(0, 5).map(function(i) { return getContent(i).title; }).join('; ');
+    var hlHtml = '';
+    for (var i = 0; i < Math.min(5, items.length); i++) {
+      var c = getContent(items[i]);
+      var ts = items[i].release_time || items[i].releaseTime || Date.now();
+      hlHtml += '<div class="brief-hl"><div class="brief-hl-cat">' + (CATS[items[i].category] || 'News') + ' · ' + ago(ts) + '</div><div class="brief-hl-txt">' + c.title + '</div></div>';
+    }
+    el('brief-headlines').innerHTML = hlHtml;
+    var prompt = 'You are Editor-in-Chief of Quasar Chronicle. Write today\'s full intelligence briefing. Structure EXACTLY as: TITLE: [10-12 word headline] MARKET CONDITIONS: [2 paragraphs on BTC ' + fmtP(btcUsd) + ' (' + btcChg + '% 24h), sentiment ' + word + ' ' + pct.toFixed(0) + '/100] KEY DEVELOPMENTS: [2 paragraphs from headlines: ' + headlines.substring(0, 300) + '] PULL QUOTE: [one powerful sentence max 20 words] FORWARD OUTLOOK: [2 paragraphs on what to watch next 7 days]. Bloomberg meets The Economist. No fluff.';
+    callAI(prompt, 1200).then(function(txt) { parseBriefing(txt); });
+  });
 }
 
 function parseBriefing(text) {
-  if (!text) return;
-  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
-  let title='', conditions=[], developments=[], outlook=[], pull='', sec='';
-  for (const l of lines) {
-    if (l.startsWith('TITLE:')) { title=l.replace('TITLE:','').trim(); continue; }
-    if (l.startsWith('MARKET CONDITIONS:')) { sec='c'; continue; }
-    if (l.startsWith('KEY DEVELOPMENTS:')) { sec='d'; continue; }
-    if (l.startsWith('PULL QUOTE:')) { sec='p'; continue; }
-    if (l.startsWith('FORWARD OUTLOOK:')) { sec='o'; continue; }
-    if (sec==='c') conditions.push(l);
-    else if (sec==='d') developments.push(l);
-    else if (sec==='p') pull=l;
-    else if (sec==='o') outlook.push(l);
-    else if (!title&&l.length>10) title=l;
+  if (!text) { setEl('brief-title', 'Market Intelligence — Daily Edition'); el('brief-conditions').innerHTML = '<p class="brief-p">AI briefing temporarily unavailable.</p>'; return; }
+  var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l; });
+  var title = '', conditions = [], developments = [], outlook = [], pullQuote = '', section = '';
+  for (var i = 0; i < lines.length; i++) {
+    var l = lines[i];
+    if (l.startsWith('TITLE:')) { title = l.replace('TITLE:', '').trim(); continue; }
+    if (l.startsWith('MARKET CONDITIONS:')) { section = 'c'; continue; }
+    if (l.startsWith('KEY DEVELOPMENTS:')) { section = 'd'; continue; }
+    if (l.startsWith('PULL QUOTE:')) { section = 'p'; continue; }
+    if (l.startsWith('FORWARD OUTLOOK:')) { section = 'o'; continue; }
+    if (section === 'c') conditions.push(l);
+    else if (section === 'd') developments.push(l);
+    else if (section === 'p') pullQuote = l;
+    else if (section === 'o') outlook.push(l);
+    else if (!title && l.length > 10) title = l;
   }
-  document.getElementById('brief-title').textContent = title||'Market Intelligence — Daily Edition';
-  document.getElementById('brief-conditions').innerHTML = conditions.map(l=>`<p class="brief-para">${l}</p>`).join('');
-  document.getElementById('brief-developments').innerHTML = developments.map(l=>`<p class="brief-para">${l}</p>`).join('');
-  document.getElementById('brief-outlook').innerHTML = outlook.map(l=>`<p class="brief-para">${l}</p>`).join('');
-  if (pull) document.getElementById('brief-pullquote').innerHTML = `<div class="brief-pull">"${pull}"</div>`;
+  setEl('brief-title', title || 'Market Intelligence — Daily Edition');
+  el('brief-conditions').innerHTML = conditions.map(function(l) { return '<p class="brief-p">' + l + '</p>'; }).join('') || '<p class="brief-p">Analysis loading...</p>';
+  el('brief-developments').innerHTML = developments.map(function(l) { return '<p class="brief-p">' + l + '</p>'; }).join('');
+  el('brief-outlook').innerHTML = outlook.map(function(l) { return '<p class="brief-p">' + l + '</p>'; }).join('');
+  el('brief-pq-wrap').innerHTML = pullQuote ? '<div class="brief-pq">"' + pullQuote + '"</div>' : '';
 }
 
-// ════════════════════════════════════════════════
-//  HOME AI BRIEFING
-// ════════════════════════════════════════════════
-async function generateHomeBriefing(headlines, mkt) {
-  const prompt = `You are the AI editor of Quasar Chronicle. Write a sharp daily market briefing. Sentiment: ${mkt.word} (${mkt.pct.toFixed(0)}/100). Avg 24h: ${mkt.avg.toFixed(2)}%. SoSoValue headlines: ${headlines} Write: 1 compelling title (max 12 words), then 3 paragraphs covering conditions, developments, outlook. End: "— Quasar Chronicle Intelligence Desk". Bloomberg authority.`;
-  return ai(prompt, 700);
-}
-
-function renderHomeBriefing(text) {
-  if (!text) { document.getElementById('home-brief-title').textContent='Markets Digest'; document.getElementById('home-brief-body').innerHTML='<p>Live AI briefing temporarily unavailable.</p>'; return; }
-  const lines = text.trim().split('\n').filter(l=>l.trim());
-  document.getElementById('home-brief-title').textContent = lines[0].replace(/^#+\s*/,'').replace(/\*\*/g,'');
-  document.getElementById('home-brief-body').innerHTML = lines.slice(1).filter(l=>!l.startsWith('—')).map(l=>`<p>${l.replace(/\*\*/g,'')}</p>`).join('');
-  document.getElementById('home-brief-sig').textContent = lines.find(l=>l.startsWith('—'))||'';
-}
-
-// ════════════════════════════════════════════════
-//  DEMO FALLBACK NEWS
-// ════════════════════════════════════════════════
-const DEMO_NEWS = [
-  {id:'d1',category:1,release_time:Date.now()-3600000,tags:['BTC','ETF'],source_link:'https://sosovalue.com/research',title:'Bitcoin Spot ETFs Record $2.1B Weekly Inflows as Institutional Demand Surges',content:'<p>United States spot Bitcoin exchange-traded funds posted their strongest weekly inflows in six weeks, with total net inflows exceeding $2.1 billion. BlackRock\'s IBIT led all products with $890 million in fresh capital.</p>'},
-  {id:'d2',category:2,release_time:Date.now()-7200000,tags:['ETH','DeFi'],source_link:'https://sosovalue.com/research',title:'Ethereum Layer-2 Ecosystem Reaches Record $60B TVL Amid Fee Compression',content:'<p>Total value locked across Ethereum scaling networks crossed $60 billion for the first time, driven by activity on Arbitrum and Base.</p>'},
-  {id:'d3',category:1,release_time:Date.now()-10800000,tags:['SOL','RWA'],source_link:'https://sosovalue.com/research',title:'Solana Emerges as Leading Chain for Real-World Asset Tokenization Pilots',content:'<p>Financial institutions are increasingly piloting real-world asset tokenization programs on Solana, attracted by its high throughput and low transaction costs.</p>'},
-  {id:'d4',category:2,release_time:Date.now()-14400000,tags:['Macro','Fed'],source_link:'https://sosovalue.com/research',title:'Federal Reserve Minutes Signal Patience; Crypto Markets Interpret as Dovish',content:'<p>The latest FOMC minutes revealed committee members are in no rush to raise rates further, a stance the crypto market has interpreted as favorable for risk assets.</p>'},
-  {id:'d5',category:1,release_time:Date.now()-18000000,tags:['SOSO','ValueChain'],source_link:'https://sosovalue.com/research',title:'SoSoValue Launches Comprehensive API Platform for One-Person Financial Empires',content:'<p>SoSoValue has opened its 9-module API suite to developers, providing access to ETF data, indices, macro events, currency data, and curated news feeds.</p>'},
-  {id:'d6',category:2,release_time:Date.now()-21600000,tags:['Stablecoins'],source_link:'https://sosovalue.com/research',title:'Stablecoin Market Cap Tops $220B as Cross-Border Use Cases Expand',content:'<p>The aggregate market capitalization of stablecoins reached a new high of $220 billion, with growth in USDT and USDC driven by remittances and trade settlement.</p>'},
-  {id:'d7',category:1,release_time:Date.now()-25200000,tags:['AI','Agents'],source_link:'https://sosovalue.com/research',title:'On-Chain AI Agents Begin Managing Real Portfolios as Regulatory Clarity Improves',content:'<p>Several DeFi protocols have deployed autonomous AI agents capable of managing on-chain investment portfolios without human intervention.</p>'},
-  {id:'d8',category:10,release_time:Date.now()-28800000,tags:['BNB','BSC'],source_link:'https://sosovalue.com/research',title:'BNB Chain Reports 4M Daily Active Addresses, Rivaling Ethereum Activity',content:'<p>BNB Chain recorded over 4 million daily active addresses, placing it alongside Ethereum in terms of raw user engagement.</p>'},
-  {id:'d9',category:2,release_time:Date.now()-32400000,tags:['Index','SSI'],source_link:'https://sosovalue.com/research',title:'SoSoValue MAG7.ssi Index Surpasses $500M AUM as Passive Crypto Demand Rises',content:'<p>SoSoValue\'s MAG7.ssi index token surpassed $500 million in assets under management, underscoring rising appetite for passive crypto exposure.</p>'},
-];
-
-// ════════════════════════════════════════════════
-//  MAIN REFRESH
-// ════════════════════════════════════════════════
-async function refreshAll() {
-  try {
-    document.getElementById('dateline').textContent = today();
-    renderWatchlist();
-    const [mkt, news, etf] = await Promise.all([fetchMarket(), fetchNews(_activeWl), fetchEtfSummary()]);
-    const mktSummary = renderMarket(mkt);
-    const headlines = renderNews(news);
+// ══════════════════════════════════════════════════════
+// REFRESH ALL (Markets page)
+// ══════════════════════════════════════════════════════
+function refreshAll() {
+  setEl('dateline', today());
+  renderWatchlist();
+  Promise.all([fetchMarket(), fetchNews(_wl), fetchEtf()]).then(function(results) {
+    var mkt = results[0], items = results[1], etf = results[2];
+    var mktSummary = renderMarket(mkt);
+    var headlines = renderNews(items);
     renderEtfSidebar(etf);
-    loadChart('bitcoin');
-    const briefText = await generateHomeBriefing(headlines||'', mktSummary||{avg:0,word:'Neutral',sentPct:50});
-    renderHomeBriefing(briefText);
-  } catch(e) {
-    console.error('refreshAll error:', e);
-    // Show demo data even if everything fails
-    renderMarket({ bitcoin:{usd:96500,usd_24h_change:1.8,usd_market_cap:1900000000000}, ethereum:{usd:3820,usd_24h_change:-0.9}, solana:{usd:178,usd_24h_change:1.2}, binancecoin:{usd:608,usd_24h_change:0.4} });
-    renderNews(DEMO_NEWS);
-    renderEtfSidebar([{name:'Bitcoin Spot ETFs',dailyFlow:312400000,totalAum:58200000000},{name:'Ethereum Spot ETFs',dailyFlow:-42100000,totalAum:12700000000}]);
-  }
-  window._etf = window._idx = window._mac = window._res = window._sdx = window._brf = false;
+    loadChart(_chartCoin);
+    var prompt = 'You are the AI editor of Quasar Chronicle. Write a sharp daily market briefing. Sentiment: ' + mktSummary.word + ' (' + mktSummary.pct.toFixed(0) + '/100). Avg 24h change: ' + mktSummary.avg.toFixed(2) + '%. Top SoSoValue headlines: ' + (headlines || '').substring(0, 400) + '. Write: 1 compelling title (max 12 words), then 3 paragraphs covering market conditions, key developments, outlook. End with: "— Quasar Chronicle Intelligence Desk". Bloomberg authority.';
+    callAI(prompt, 700).then(function(txt) { renderHomeBriefing(txt); });
+  });
 }
 
+// ══════════════════════════════════════════════════════
 // INIT
-document.getElementById('dateline').textContent = today();
+// ══════════════════════════════════════════════════════
+document.getElementById('nav-markets').classList.add('active');
+setEl('dateline', today());
 refreshAll();
-setInterval(refreshAll, 10*60*1000);
+setInterval(refreshAll, 10 * 60 * 1000);
 </script>
 </body>
 </html>
